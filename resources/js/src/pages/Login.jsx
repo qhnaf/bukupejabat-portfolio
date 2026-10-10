@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api, { endpoints } from "../api/client";
 import BgImage from "../assets/images/gedung-pancasila.jpg";
+import Input from "../components/ui/Input";
+import Button from "../components/ui/Button";
 
 export default function Login({ onLogin }) {
     const navigate = useNavigate();
@@ -186,40 +188,27 @@ export default function Login({ onLogin }) {
                         )}
 
                         <form className="space-y-4" onSubmit={handleLogin}>
-                            <div>
-                                <label htmlFor="login-email" className="block text-xs font-medium text-slate-600 mb-2">
-                                    Email
-                                </label>
-                                <input
-                                    id="login-email"
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    // Placeholder contoh pakai akun database
-                                    placeholder="sdm@kemenlu.go.id"
-                                    className="w-full px-4 py-3 rounded-xl border bg-white text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-300 border-slate-200"
-                                    required
-                                    disabled={isLoading}
-                                />
-                            </div>
+                            <Input
+                                id="login-email"
+                                type="email"
+                                label="Email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="sdm@kemenlu.go.id"
+                                required
+                                disabled={isLoading}
+                            />
 
-                            <div>
-                                <label htmlFor="login-password" className="block text-xs font-medium text-slate-600 mb-2">
-                                    Password
-                                </label>
-                                <div className="relative">
-                                    <input
-                                        id="login-password"
-                                        type="password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        placeholder="Enter password"
-                                        className="w-full px-4 py-3 rounded-xl border bg-white text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-300 border-slate-200"
-                                        required
-                                        disabled={isLoading}
-                                    />
-                                </div>
-                            </div>
+                            <Input
+                                id="login-password"
+                                type="password"
+                                label="Password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder="Enter password"
+                                required
+                                disabled={isLoading}
+                            />
 
                             {/* ── CAPTCHA ─────────────────────────────────── */}
                             <div>
@@ -252,14 +241,14 @@ export default function Login({ onLogin }) {
                                 </div>
 
                                 {/* Baris 2: Input jawaban (full width) */}
-                                <input
+                                <Input
                                     id="login-captcha"
                                     type="number"
                                     inputMode="numeric"
                                     value={captchaInput}
                                     onChange={(e) => setCaptchaInput(e.target.value)}
                                     placeholder="Ketik jawaban di sini..."
-                                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 font-bold focus:outline-none focus:ring-2 focus:ring-sky-300"
+                                    className="font-bold"
                                     required
                                     disabled={isLoading}
                                 />
@@ -272,15 +261,16 @@ export default function Login({ onLogin }) {
 
 
                             <div>
-                                <button
+                                <Button
                                     type="submit"
+                                    variant="primary"
+                                    size="lg"
+                                    fullWidth
                                     disabled={isLoading}
-                                    className={`btn w-full rounded-xl text-white font-semibold mt-4 cursor-pointer transition-colors py-3
-                                        ${isLoading ? "bg-slate-400 cursor-not-allowed" : "btn-info hover:bg-sky-600"}
-                                    `}
+                                    className="mt-4"
                                 >
                                     {isLoading ? "Memproses..." : "Sign in"}
-                                </button>
+                                </Button>
                             </div>
                         </form>
 

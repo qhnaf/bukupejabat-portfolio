@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import { loadPdfLibs } from "../utils/pdfLibs";
 import kemluBg from "../assets/images/logo_kemlu_fix.png";
 import { logActivity } from "../utils/logActivity";
+import Modal from "../components/Modal";
 
 export default function DalamNegeri() {
     const navigate = useNavigate();
@@ -714,49 +715,49 @@ export default function DalamNegeri() {
             </div>
 
             {isEditModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm p-4" style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }} onClick={() => setIsEditModalOpen(false)}>
-                    <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl p-6 text-slate-800 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-                        <h3 className="text-xl font-bold text-slate-800 mb-4 border-b pb-2">
-                            Edit Dalam Negeri - {editData.deskripsi || editData.nama_unit_kerja}
-                        </h3>
-                        <form onSubmit={handleUpdate} className="space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="md:col-span-2">
-                                    <label className="block text-sm font-medium text-slate-700 mb-1">Alamat</label>
-                                    <textarea name="alamat" value={editData.alamat} onChange={handleInputChange} className="textarea w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:outline-none" rows="2" />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="block text-sm font-medium text-slate-700 mb-1">No. Telepon</label>
-                                    <input type="text" name="telepon" value={editData.telepon} onChange={handleInputChange} placeholder="Contoh: 021-12345678 EXT.021" className="input input-sm w-full bg-white text-slate-800 border border-slate-300" />
-                                    <label className="block text-sm font-medium text-slate-700 mb-1">Fax</label>
-                                    <input type="text" name="fax" value={editData.fax} onChange={handleInputChange} className="input input-sm w-full bg-white text-slate-800 border border-slate-300" />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
-                                    <textarea
-                                        name="email"
-                                        value={editData.email}
-                                        onChange={handleInputChange}
-                                        rows="2"
-                                        className="textarea w-full bg-white text-slate-800 border border-slate-300 resize-none"
-                                    />
-                                    <label className="block text-sm font-medium text-slate-700 mb-1">Website</label>
-                                    <textarea
-                                        name="website"
-                                        value={editData.website}
-                                        onChange={handleInputChange}
-                                        rows="2"
-                                        className="textarea w-full bg-white text-slate-800 border border-slate-300 resize-none"
-                                    />
-                                </div>
+                <Modal
+                    open={isEditModalOpen}
+                    onClose={() => setIsEditModalOpen(false)}
+                    title={`Edit Dalam Negeri - ${editData.deskripsi || editData.nama_unit_kerja}`}
+                    size="lg"
+                >
+                    <form onSubmit={handleUpdate} className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="md:col-span-2">
+                                <label className="block text-sm font-medium text-slate-700 mb-1">Alamat</label>
+                                <textarea name="alamat" value={editData.alamat} onChange={handleInputChange} className="textarea w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:outline-none" rows="2" />
                             </div>
-                            <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-100">
-                                <button type="button" onClick={() => setIsEditModalOpen(false)} className="btn btn-sm btn-ghost text-slate-500">Batal</button>
-                                <button type="submit" disabled={isUpdating} className="btn btn-sm bg-sky-500 text-white border-none">{isUpdating ? "Menyimpan..." : "Simpan Perubahan"}</button>
+                            <div className="space-y-2">
+                                <label className="block text-sm font-medium text-slate-700 mb-1">No. Telepon</label>
+                                <input type="text" name="telepon" value={editData.telepon} onChange={handleInputChange} placeholder="Contoh: 021-12345678 EXT.021" className="input input-sm w-full bg-white text-slate-800 border border-slate-300" />
+                                <label className="block text-sm font-medium text-slate-700 mb-1">Fax</label>
+                                <input type="text" name="fax" value={editData.fax} onChange={handleInputChange} className="input input-sm w-full bg-white text-slate-800 border border-slate-300" />
                             </div>
-                        </form>
-                    </div>
-                </div>
+                            <div className="space-y-2">
+                                <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                                <textarea
+                                    name="email"
+                                    value={editData.email}
+                                    onChange={handleInputChange}
+                                    rows="2"
+                                    className="textarea w-full bg-white text-slate-800 border border-slate-300 resize-none"
+                                />
+                                <label className="block text-sm font-medium text-slate-700 mb-1">Website</label>
+                                <textarea
+                                    name="website"
+                                    value={editData.website}
+                                    onChange={handleInputChange}
+                                    rows="2"
+                                    className="textarea w-full bg-white text-slate-800 border border-slate-300 resize-none"
+                                />
+                            </div>
+                        </div>
+                        <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-100">
+                            <button type="button" onClick={() => setIsEditModalOpen(false)} className="btn btn-sm btn-ghost text-slate-500">Batal</button>
+                            <button type="submit" disabled={isUpdating} className="btn btn-sm bg-sky-500 text-white border-none">{isUpdating ? "Menyimpan..." : "Simpan Perubahan"}</button>
+                        </div>
+                    </form>
+                </Modal>
             )}
         </div>
     );

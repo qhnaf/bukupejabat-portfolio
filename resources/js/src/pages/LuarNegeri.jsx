@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import { loadPdfLibs } from "../utils/pdfLibs";
 import kemluBg from "../assets/images/logo_kemlu_fix.png";
 import { logActivity } from "../utils/logActivity";
+import Modal from "../components/Modal";
 
 export default function LuarNegeri() {
     const navigate = useNavigate();
@@ -593,86 +594,85 @@ export default function LuarNegeri() {
 
             {/* --- KOMPONEN MODAL EDIT luar negeri --- */}
             {isEditModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm p-4" style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }} onClick={() => setIsEditModalOpen(false)}>
-                    <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl p-6 text-slate-800 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-                        <h3 className="text-xl font-bold text-slate-800 mb-4 border-b pb-2">
-                            Edit Luar Negeri - {editData.nama_unit_kerja || editData.deskripsi}
-                        </h3>
-
-                        <form onSubmit={handleUpdate} className="space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {/* Alamat */}
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                                        Alamat
-                                    </label>
-                                    <textarea name="alamat" value={editData.alamat} onChange={handleInputChange} className="textarea w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none" rows="3" />
-                                </div>
-
-                                {/* Kontak */}
-                                <div className="space-y-2">
-                                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                                        No. Telepon
-                                    </label>
-                                    <input type="text" name="telepon" value={editData.telepon} onChange={handleInputChange} placeholder="Telepon" className="input input-sm w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none" />
-                                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                                        Fax
-                                    </label>
-                                    <input type="text" name="fax" value={editData.fax} onChange={handleInputChange} placeholder="Fax" className="input input-sm w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none" />
-                                </div>
-
-                                {/* Digital */}
-                                <div className="space-y-2">
-                                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                                        Email
-                                    </label>
-                                    <textarea
-                                        name="email"
-                                        value={editData.email}
-                                        onChange={handleInputChange}
-                                        placeholder="Email"
-                                        rows="2"
-                                        className="textarea w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none resize-none"
-                                    />
-                                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                                        Website
-                                    </label>
-                                    <textarea
-                                        name="website"
-                                        value={editData.website}
-                                        onChange={handleInputChange}
-                                        placeholder="Website"
-                                        rows="2"
-                                        className="textarea w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none resize-none"
-                                    />
-                                </div>
-
-                                {/* Operasional - khusus Luar Negeri */}
-                                <div className="space-y-2">
-                                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                                        Hari Kerja
-                                    </label>
-                                    <input type="text" name="hari_kerja" value={editData.hari_kerja} onChange={handleInputChange} placeholder="Hari Kerja (Cth: Senin - Jumat)" className="input input-sm w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none" />
-                                    <input type="text" name="beda_jam" value={editData.beda_jam} onChange={handleInputChange} placeholder="Beda Jam" className="input input-sm w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none" />
-                                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                                        Perbedaan Waktu
-                                    </label>
-                                    <input type="text" name="musim_panas" value={editData.musim_panas} onChange={handleInputChange} placeholder="Musim Panas" className="input input-sm w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none" />
-                                    <input type="text" name="musim_dingin" value={editData.musim_dingin} onChange={handleInputChange} placeholder="Musim Dingin" className="input input-sm w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none" />
-                                </div>
+                <Modal
+                    open={isEditModalOpen}
+                    onClose={() => setIsEditModalOpen(false)}
+                    title={`Edit Luar Negeri - ${editData.nama_unit_kerja || editData.deskripsi}`}
+                    size="lg"
+                >
+                    <form onSubmit={handleUpdate} className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {/* Alamat */}
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">
+                                    Alamat
+                                </label>
+                                <textarea name="alamat" value={editData.alamat} onChange={handleInputChange} className="textarea w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none" rows="3" />
                             </div>
 
-                            <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-100">
-                                <button type="button" onClick={() => setIsEditModalOpen(false)} className="btn btn-sm btn-ghost text-slate-500 hover:bg-slate-100">
-                                    Batal
-                                </button>
-                                <button type="submit" disabled={isUpdating} className="btn btn-sm bg-sky-500 hover:bg-sky-600 text-white border-none">
-                                    {isUpdating ? "Menyimpan..." : "Simpan Perubahan"}
+                            {/* Kontak */}
+                            <div className="space-y-2">
+                                <label className="block text-sm font-medium text-slate-700 mb-1">
+                                    No. Telepon
+                                </label>
+                                <input type="text" name="telepon" value={editData.telepon} onChange={handleInputChange} placeholder="Telepon" className="input input-sm w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none" />
+                                <label className="block text-sm font-medium text-slate-700 mb-1">
+                                    Fax
+                                </label>
+                                <input type="text" name="fax" value={editData.fax} onChange={handleInputChange} placeholder="Fax" className="input input-sm w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none" />
+                            </div>
+
+                            {/* Digital */}
+                            <div className="space-y-2">
+                                <label className="block text-sm font-medium text-slate-700 mb-1">
+                                    Email
+                                </label>
+                                <textarea
+                                    name="email"
+                                    value={editData.email}
+                                    onChange={handleInputChange}
+                                    placeholder="Email"
+                                    rows="2"
+                                    className="textarea w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none resize-none"
+                                />
+                                <label className="block text-sm font-medium text-slate-700 mb-1">
+                                    Website
+                                </label>
+                                <textarea
+                                    name="website"
+                                    value={editData.website}
+                                    onChange={handleInputChange}
+                                    placeholder="Website"
+                                    rows="2"
+                                    className="textarea w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none resize-none"
+                                />
+                            </div>
+
+                            {/* Operasional - khusus Luar Negeri */}
+                            <div className="space-y-2">
+                                <label className="block text-sm font-medium text-slate-700 mb-1">
+                                    Hari Kerja
+                                </label>
+                                <input type="text" name="hari_kerja" value={editData.hari_kerja} onChange={handleInputChange} placeholder="Hari Kerja (Cth: Senin - Jumat)" className="input input-sm w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none" />
+                                <input type="text" name="beda_jam" value={editData.beda_jam} onChange={handleInputChange} placeholder="Beda Jam" className="input input-sm w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none" />
+                                <label className="block text-sm font-medium text-slate-700 mb-1">
+                                    Perbedaan Waktu
+                                </label>
+                                <input type="text" name="musim_panas" value={editData.musim_panas} onChange={handleInputChange} placeholder="Musim Panas" className="input input-sm w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none" />
+                                <input type="text" name="musim_dingin" value={editData.musim_dingin} onChange={handleInputChange} placeholder="Musim Dingin" className="input input-sm w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none" />
+                            </div>
+                        </div>
+
+                        <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-100">
+                            <button type="button" onClick={() => setIsEditModalOpen(false)} className="btn btn-sm btn-ghost text-slate-500 hover:bg-slate-100">
+                                Batal
+                            </button>
+                            <button type="submit" disabled={isUpdating} className="btn btn-sm bg-sky-500 hover:bg-sky-600 text-white border-none">
+                                {isUpdating ? "Menyimpan..." : "Simpan Perubahan"}
                                 </button>
                             </div>
                         </form>
-                    </div>
-                </div>
+                </Modal>
             )}
         </div>
     );

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import api, { endpoints } from "../api/client";
 import Pagination from "../components/Pagination";
 import Swal from "sweetalert2";
+import Modal from "../components/Modal";
 
 export default function UnitKerja() {
     const [units, setUnits] = useState([]);
@@ -362,18 +363,12 @@ export default function UnitKerja() {
 
             {/* --- KOMPONEN MODAL EDIT --- */}
             {isEditModalOpen && (
-                <div
-                    className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm p-4"
-                    style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
-                    onClick={() => setIsEditModalOpen(false)}
+                <Modal
+                    open={isEditModalOpen}
+                    onClose={() => setIsEditModalOpen(false)}
+                    title="Edit Unit Kerja"
+                    size="lg"
                 >
-                    <div
-                        className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl p-6 text-slate-800 max-h-[90vh] overflow-y-auto"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <h3 className="text-xl font-bold text-slate-800 mb-4 border-b pb-2">
-                            Edit Unit Kerja
-                        </h3>
 
                         <form onSubmit={handleUpdate} className="space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -522,8 +517,7 @@ export default function UnitKerja() {
                                 </button>
                             </div>
                         </form>
-                    </div>
-                </div>
+                </Modal>
             )}
         </div>
     );
