@@ -6,6 +6,9 @@ import Swal from "sweetalert2"; // TAMBAHAN: Import SweetAlert2
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Legend } from 'recharts';
 import LogHistory from "../components/LogHistory";
 import kemluBg from "../assets/images/logo_kemlu_fix.png";
+import Input from "../components/ui/Input";
+import Button from "../components/ui/Button";
+import Card from "../components/ui/Card";
 
 export default function DashboardAdmin() {
     const navigate = useNavigate();
@@ -546,7 +549,7 @@ export default function DashboardAdmin() {
 
     return (
         <div className="space-y-6">
-            <div className="max-w-5xl w-full bg-white rounded-2xl shadow-md shadow-slate-200/60 p-10 border border-slate-100 text-center">
+            <Card padding={false} className="max-w-5xl w-full p-10 shadow-md shadow-slate-200/60 border-slate-100 text-center">
                 {/* Header Section */}
                 <div className="mb-12">
                     <div className="inline-block p-4 bg-sky-50 rounded-3xl mb-6">
@@ -580,12 +583,12 @@ export default function DashboardAdmin() {
                             </span>
                         </div>
                         <div className="flex gap-2 w-full mt-2">
-                            <button onClick={() => downloadPDFDalamNegeri('preview')} className="flex-1 py-2.5 bg-emerald-50 text-emerald-600 hover:bg-emerald-100 rounded-xl text-xs font-bold uppercase tracking-wide transition-colors">
+                            <Button variant="softSuccess" size="sm" onClick={() => downloadPDFDalamNegeri('preview')} className="flex-1 uppercase tracking-wide">
                                 Preview
-                            </button>
-                            <button onClick={() => downloadPDFDalamNegeri('download')} className="flex-1 py-2.5 bg-emerald-500 text-white hover:bg-emerald-600 rounded-xl text-xs font-bold uppercase tracking-wide transition-colors">
+                            </Button>
+                            <Button variant="success" size="sm" onClick={() => downloadPDFDalamNegeri('download')} className="flex-1 uppercase tracking-wide">
                                 Unduh
-                            </button>
+                            </Button>
                         </div>
                     </div>
 
@@ -605,12 +608,12 @@ export default function DashboardAdmin() {
                             </span>
                         </div>
                         <div className="flex gap-2 w-full mt-2">
-                            <button onClick={() => downloadPDFLuarNegeri('preview')} className="flex-1 py-2.5 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-xl text-xs font-bold uppercase tracking-wide transition-colors">
+                            <Button variant="softDanger" size="sm" onClick={() => downloadPDFLuarNegeri('preview')} className="flex-1 uppercase tracking-wide">
                                 Preview
-                            </button>
-                            <button onClick={() => downloadPDFLuarNegeri('download')} className="flex-1 py-2.5 bg-rose-500 text-white hover:bg-rose-600 rounded-xl text-xs font-bold uppercase tracking-wide transition-colors">
+                            </Button>
+                            <Button variant="danger" size="sm" onClick={() => downloadPDFLuarNegeri('download')} className="flex-1 uppercase tracking-wide">
                                 Unduh
-                            </button>
+                            </Button>
                         </div>
                     </div>
                 </div>
@@ -619,7 +622,7 @@ export default function DashboardAdmin() {
                 <p className="mt-12 text-slate-400 text-xs font-medium uppercase tracking-[4px]">
                     Kementerian Luar Negeri Republik Indonesia
                 </p>
-            </div>
+            </Card>
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
                 <StatCard title="TOTAL PEGAWAI" value={stats.totalPegawai} tone="slate">
@@ -653,25 +656,27 @@ export default function DashboardAdmin() {
 
             {/* PUBLIC ACTIVITY CHART */}
             {localStorage.getItem("user_role") === "superadmin" && (
-                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 w-full text-slate-700 relative mb-6 mt-6 p-6">
+                <Card className="relative mb-6 mt-6">
                     <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
                         <div>
                             <h3 className="text-lg font-bold text-slate-800">Statistik Aktivitas Publik</h3>
                             <p className="text-xs text-slate-500 font-medium">Grafik preview dan unduhan dokumen</p>
                         </div>
                         <div className="flex items-center gap-2">
-                            <input
+                            <Input
                                 type="date"
-                                className="px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 bg-slate-50 text-slate-700"
+                                size="sm"
                                 value={publicStatsStartDate}
                                 onChange={(e) => setPublicStatsStartDate(e.target.value)}
+                                aria-label="Tanggal mulai statistik"
                             />
                             <span className="text-slate-400">-</span>
-                            <input
+                            <Input
                                 type="date"
-                                className="px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 bg-slate-50 text-slate-700"
+                                size="sm"
                                 value={publicStatsEndDate}
                                 onChange={(e) => setPublicStatsEndDate(e.target.value)}
+                                aria-label="Tanggal akhir statistik"
                             />
                         </div>
                     </div>
@@ -696,7 +701,7 @@ export default function DashboardAdmin() {
                             </div>
                         )}
                     </div>
-                </div>
+                </Card>
             )}
 
             {localStorage.getItem("user_role") === "superadmin" && <LogHistory />}

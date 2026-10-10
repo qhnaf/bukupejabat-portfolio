@@ -15,6 +15,8 @@ const VARIANT_CLASSES = {
         "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50",
     outlineIndigo:
         "bg-white text-indigo-600 border border-indigo-300 hover:bg-indigo-50",
+    softSuccess: "bg-emerald-50 text-emerald-600 hover:bg-emerald-100",
+    softDanger: "bg-rose-50 text-rose-600 hover:bg-rose-100",
 };
 
 const SIZE_CLASSES = {
