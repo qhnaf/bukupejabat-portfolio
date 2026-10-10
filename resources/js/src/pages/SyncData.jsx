@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import api, { endpoints } from '../api/client';
+import Button from '../components/ui/Button';
+import Card from '../components/ui/Card';
+import Input from '../components/ui/Input';
+import Switch from '../components/ui/Switch';
+import ChoiceCard from '../components/ui/ChoiceCard';
 
 export default function SyncData() {
     const [isSyncing, setIsSyncing] = useState(false);
@@ -251,14 +256,14 @@ export default function SyncData() {
     };
 
     return (
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 w-full text-slate-700 relative p-6 md:p-8 min-h-[80vh] mb-5">
+        <Card padding={false} className="w-full relative p-6 md:p-8 min-h-[80vh] mb-5">
             <div className="mb-8">
                 <h2 className="text-2xl font-bold text-slate-800">Sinkronisasi Data</h2>
                 <p className="text-slate-500 text-sm mt-1">Kelola pembaruan data dari API Utama secara manual maupun otomatis.</p>
             </div>
 
             {/* --- KONFIGURASI ENDPOINT API --- */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm mb-8">
+            <Card className="mb-8">
                 <div className="flex items-center gap-3 mb-5 pb-4 border-b border-slate-100">
                     <div className="bg-indigo-50 p-2.5 rounded-xl text-indigo-500">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
@@ -325,14 +330,15 @@ export default function SyncData() {
                     {/* HTTP Method */}
                     <div>
                         <label className="block text-sm font-semibold text-slate-700 mb-1.5">HTTP Method</label>
-                        <div className="flex gap-3">
-                            {['GET', 'POST'].map((method) => (
-                                <label key={method} className="flex-1 flex items-center justify-center gap-2 cursor-pointer border border-slate-200 rounded-xl py-2.5 bg-slate-50 hover:bg-indigo-50 hover:border-indigo-300 transition-all has-[:checked]:bg-indigo-50 has-[:checked]:border-indigo-400">
-                                    <input type="radio" name="httpMethod" value={method} checked={httpMethod === method} onChange={(e) => setHttpMethod(e.target.value)} className="w-4 h-4 text-indigo-500 focus:ring-indigo-400" />
-                                    <span className={`text-sm font-bold font-mono ${method === 'GET' ? 'text-emerald-600' : 'text-amber-600'}`}>{method}</span>
-                                </label>
-                            ))}
-                        </div>
+                        <ChoiceCard
+                            name="httpMethod"
+                            value={httpMethod}
+                            onChange={setHttpMethod}
+                            options={[
+                                { value: 'GET', className: 'text-emerald-600' },
+                                { value: 'POST', className: 'text-amber-600' },
+                            ]}
+                        />
                         <p className="text-xs text-slate-400 mt-1">Sesuaikan dengan dokumentasi API KEMLU.</p>
                     </div>
 
@@ -354,29 +360,29 @@ export default function SyncData() {
 
                     {/* Action Buttons */}
                     <div className="md:col-span-2 flex flex-col sm:flex-row items-center justify-end gap-3 pt-2 border-t border-slate-100">
-                        <button
-                            type="button"
+                        <Button
+                            variant="outlineIndigo"
                             onClick={handleTestConnection}
-                            className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 border border-indigo-300 text-indigo-600 hover:bg-indigo-50 font-semibold text-sm rounded-xl transition-all"
+                            className="w-full sm:w-auto"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M9.348 14.651a3.75 3.75 0 0 1 0-5.303m5.304 0a3.75 3.75 0 0 1 0 5.303m-7.425 2.122a6.75 6.75 0 0 1 0-9.546m9.546 0a6.75 6.75 0 0 1 0 9.546M5.106 18.894c-3.808-3.808-3.808-9.98 0-13.789m13.788 0c3.808 3.808 3.808 9.981 0 13.789M12 12h.008v.008H12V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
                             </svg>
                             Test Koneksi
-                        </button>
-                        <button
-                            type="button"
+                        </Button>
+                        <Button
+                            variant="indigo"
                             onClick={handleSaveConfig}
-                            className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-xl shadow-md shadow-indigo-200 transition-all active:scale-95"
+                            className="w-full sm:w-auto shadow-md shadow-indigo-200"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 3.75V16.5L12 14.25 7.5 16.5V3.75m9 0H18A2.25 2.25 0 0 1 20.25 6v12A2.25 2.25 0 0 1 18 20.25H6A2.25 2.25 0 0 1 3.75 18V6A2.25 2.25 0 0 1 6 3.75h1.5m9 0h-9" />
                             </svg>
                             Simpan Konfigurasi API
-                        </button>
+                        </Button>
                     </div>
                 </div>
-            </div>
+            </Card>
 
             {/* Banner Peringatan Jika Diblokir */}
             {isBlocked && (
@@ -392,7 +398,7 @@ export default function SyncData() {
                             <p className="text-xs text-rose-600">Terdeteksi kegagalan 3x berturut-turut. Harap periksa endpoint API Anda.</p>
                         </div>
                     </div>
-                    <button onClick={handleResetBlock} className="btn btn-sm bg-rose-600 hover:bg-rose-700 text-white border-none w-full sm:w-auto">Buka Blokir</button>
+                    <Button variant="danger" size="sm" onClick={handleResetBlock} className="w-full sm:w-auto">Buka Blokir</Button>
                 </div>
             )}
 
@@ -410,13 +416,15 @@ export default function SyncData() {
                     <h3 className="text-lg font-bold text-slate-800 z-10 mb-2">Sinkronisasi Manual</h3>
                     <p className="text-sm text-slate-600 z-10 mb-6">Tarik data terbaru dari API Utama sekarang juga. Gunakan opsi ini jika Anda butuh update data instan.</p>
 
-                    <button
+                    <Button
+                        variant="primary"
+                        size="lg"
                         onClick={handleManualSync}
                         disabled={isSyncing || isBlocked}
-                        className="z-10 w-full max-w-xs py-3 px-6 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl shadow-lg shadow-sky-200 transition-all active:scale-95 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                        className="z-10 w-full max-w-xs shadow-lg shadow-sky-200"
                     >
                         {isSyncing ? 'Sedang Memproses...' : 'Mulai Sync Manual'}
-                    </button>
+                    </Button>
                     {failCount > 0 && !isBlocked && (
                         <p className="z-10 mt-3 text-xs font-bold text-amber-500 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
                             Peringatan: Gagal {failCount}/3 kali
@@ -425,7 +433,7 @@ export default function SyncData() {
                 </div>
 
                 {/* --- CARD AUTO SYNC --- */}
-                <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                <Card>
                     <div className="flex justify-between items-center border-b border-slate-100 pb-4 mb-4">
                         <div className="flex items-center gap-3">
                             <div className="bg-slate-100 p-2 rounded-lg text-slate-600">
@@ -435,10 +443,12 @@ export default function SyncData() {
                             </div>
                             <h3 className="text-base font-bold text-slate-800">Pengaturan Auto Sync</h3>
                         </div>
-                        <label className="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" className="sr-only peer" checked={isAutoSyncEnabled} onChange={(e) => setIsAutoSyncEnabled(e.target.checked)} disabled={isBlocked} />
-                            <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500 peer-disabled:opacity-50"></div>
-                        </label>
+                        <Switch
+                            checked={isAutoSyncEnabled}
+                            onChange={setIsAutoSyncEnabled}
+                            disabled={isBlocked}
+                            label="Aktifkan Auto Sync"
+                        />
                     </div>
 
                     <div className={`space-y-5 transition-opacity ${isAutoSyncEnabled && !isBlocked ? 'opacity-100' : 'opacity-50 pointer-events-none'}`}>
@@ -479,12 +489,12 @@ export default function SyncData() {
                         )}
 
                         <div className="pt-2">
-                            <button onClick={handleSaveConfig} className="w-full py-2.5 bg-slate-800 hover:bg-slate-900 text-white text-sm font-bold rounded-xl transition-colors shadow-md">
+                            <Button variant="dark" fullWidth onClick={handleSaveConfig}>
                                 Simpan Konfigurasi
-                            </button>
+                            </Button>
                         </div>
                     </div>
-                </div>
+                </Card>
             </div>
 
             {/* --- LOG SINKRONISASI --- */}
@@ -493,26 +503,28 @@ export default function SyncData() {
                     <h3 className="text-lg font-bold text-slate-800">Riwayat Sinkronisasi (Log)</h3>
                     <div className="flex flex-col sm:flex-row items-center gap-3">
                         <div className="flex items-center gap-2">
-                            <input
+                            <Input
                                 type="date"
-                                className="px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 bg-slate-50 text-slate-700"
+                                size="sm"
                                 value={startDate}
                                 onChange={(e) => setStartDate(e.target.value)}
+                                aria-label="Tanggal mulai"
                             />
                             <span className="text-slate-400">-</span>
-                            <input
+                            <Input
                                 type="date"
-                                className="px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 bg-slate-50 text-slate-700"
+                                size="sm"
                                 value={endDate}
                                 onChange={(e) => setEndDate(e.target.value)}
+                                aria-label="Tanggal akhir"
                             />
                         </div>
-                        <button onClick={handleExport} className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-sm font-bold shadow-sm transition-colors flex items-center gap-2 w-full sm:w-auto justify-center">
+                        <Button variant="success" onClick={handleExport} className="w-full sm:w-auto">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                             </svg>
                             Export CSV
-                        </button>
+                        </Button>
                     </div>
                 </div>
                 <div className="overflow-x-auto">
@@ -558,6 +570,6 @@ export default function SyncData() {
                     </table>
                 </div>
             </div>
-        </div>
+        </Card>
     );
 }
