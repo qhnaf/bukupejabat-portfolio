@@ -54,6 +54,16 @@ class UserController extends Controller
     // ==========================================
     public function update(Request $request, $id)
     {
+        // 0. Validasi input sebelum menyentuh database
+        $request->validate([
+            'email'             => 'sometimes|nullable|email|max:255',
+            'username'          => 'sometimes|nullable|string|max:255',
+            'role'              => 'sometimes|nullable|in:admin,superadmin',
+            'unit_kerja_id'     => 'sometimes|nullable|integer',
+            'current_password'  => 'required_with:new_password',
+            'new_password'      => 'sometimes|nullable|string|min:8',
+        ]);
+
         // 1. Cari data user berdasarkan ID
         $user = User::find($id);
 

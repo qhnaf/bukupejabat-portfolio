@@ -10,8 +10,6 @@ export default function Login({ onLogin }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const [emailError, setEmailError] = useState("");
-    const [passwordError, setPasswordError] = useState("");
     // State loading agar user tahu sedang memproses (Opsional, tidak merubah tampilan dasar)
     const [isLoading, setIsLoading] = useState(false);
 
@@ -95,8 +93,6 @@ export default function Login({ onLogin }) {
     const handleLogin = async (e) => {
         e.preventDefault();
         setError(""); // Reset error lama
-        setEmailError("");
-        setPasswordError("");
         setCaptchaError("");
 
         // Validasi CAPTCHA sebelum kirim ke server
@@ -142,16 +138,8 @@ export default function Login({ onLogin }) {
             }
         } catch (err) {
             console.error("Login Error:", err);
-            const errType = err.response?.data?.error_type;
-            const errMsg  = err.response?.data?.message || "Login Gagal. Periksa Email/Password atau Server.";
-
-            if (errType === 'email') {
-                setEmailError(errMsg);
-            } else if (errType === 'password') {
-                setPasswordError(errMsg);
-            } else {
-                setError(errMsg);
-            }
+            const errMsg = err.response?.data?.message || "Login Gagal. Periksa Email/Password atau Server.";
+            setError(errMsg);
             // Refresh captcha setiap kali login gagal
             generateCaptcha();
         } finally {
@@ -206,21 +194,13 @@ export default function Login({ onLogin }) {
                                     id="login-email"
                                     type="email"
                                     value={email}
-                                    onChange={(e) => { setEmail(e.target.value); setEmailError(""); }}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     // Placeholder contoh pakai akun database
                                     placeholder="sdm@kemenlu.go.id"
-                                    className={`w-full px-4 py-3 rounded-xl border bg-white text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-300 ${
-                                        emailError ? 'border-red-400 focus:ring-red-300' : 'border-slate-200'
-                                    }`}
+                                    className="w-full px-4 py-3 rounded-xl border bg-white text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-300 border-slate-200"
                                     required
                                     disabled={isLoading}
                                 />
-                                {emailError && (
-                                    <p role="alert" className="text-xs text-red-500 mt-1.5 font-medium flex items-center gap-1">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-3.5 flex-shrink-0"><path fillRule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-8-5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5A.75.75 0 0 1 10 5Zm0 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clipRule="evenodd" /></svg>
-                                        {emailError}
-                                    </p>
-                                )}
                             </div>
 
                             <div>
@@ -232,20 +212,12 @@ export default function Login({ onLogin }) {
                                         id="login-password"
                                         type="password"
                                         value={password}
-                                        onChange={(e) => { setPassword(e.target.value); setPasswordError(""); }}
+                                        onChange={(e) => setPassword(e.target.value)}
                                         placeholder="Enter password"
-                                        className={`w-full px-4 py-3 rounded-xl border bg-white text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-300 ${
-                                            passwordError ? 'border-red-400 focus:ring-red-300' : 'border-slate-200'
-                                        }`}
+                                        className="w-full px-4 py-3 rounded-xl border bg-white text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-300 border-slate-200"
                                         required
                                         disabled={isLoading}
                                     />
-                                {passwordError && (
-                                    <p role="alert" className="text-xs text-red-500 mt-1.5 font-medium flex items-center gap-1">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-3.5 flex-shrink-0"><path fillRule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-8-5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5A.75.75 0 0 1 10 5Zm0 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clipRule="evenodd" /></svg>
-                                        {passwordError}
-                                    </p>
-                                )}
                                 </div>
                             </div>
 

@@ -18,22 +18,14 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        // 2. Cek apakah email terdaftar
-        $user = User::where('email', $request->email)->first();
-        if (!$user) {
-            return response()->json([
-                'success'    => false,
-                'error_type' => 'email',
-                'message'    => 'Email tidak ditemukan. Pastikan email yang Anda masukkan benar.'
-            ], 401);
-        }
-
-        // 3. Cek password
+        // 2. Coba autentikasi.
+        //    Pesan error sengaja dibuat generik (tidak membedakan "email
+        //    tidak terdaftar" vs "password salah") agar penyerang tidak
+        //    bisa membangun daftar email valid lewat login enumeration.
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
-                'success'    => false,
-                'error_type' => 'password',
-                'message'    => 'Password yang Anda masukkan salah.'
+                'success' => false,
+                'message' => 'Email atau password salah.',
             ], 401);
         }
 

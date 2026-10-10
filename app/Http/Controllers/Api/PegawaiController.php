@@ -173,6 +173,19 @@ class PegawaiController extends Controller
 
     public function update(Request $request, $id)
     {
+        // 0. Validasi input sebelum menyentuh database
+        $request->validate([
+            'nama'            => 'sometimes|nullable|string|max:255',
+            'email'           => 'sometimes|nullable|email|max:255',
+            'no_handphone'    => 'sometimes|nullable|string|max:255',
+            'alamat'          => 'sometimes|nullable|string',
+            'bobot'           => 'sometimes|nullable|string|max:255',
+            'wisma'           => 'sometimes|nullable|string|max:255',
+            'tmt_kedatangan'  => 'sometimes|nullable|string|max:255',
+            'tmt_credential'  => 'sometimes|nullable|string|max:255',
+            'jabatan'         => 'sometimes|nullable|string|max:255',
+        ]);
+
         $pegawai = Pegawai::find($id);
 
         if (!$pegawai) {

@@ -11,7 +11,9 @@ use App\Http\Controllers\Api\SyncDataController;
 use App\Http\Controllers\Api\PublicActivityController;
 
 // --- PUBLIC ROUTES ---
-Route::post('/login', [AuthController::class, 'login']);
+// throttle:5,1 = maksimal 5 percobaan login per menit per IP.
+// Melebihi batas akan mendapat respon 429 Too Many Requests.
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
 Route::post('/public-activities/hit', [PublicActivityController::class, 'hit']);
 Route::get('/unit-kerja/dalam-negeri', [UnitKerjaController::class, 'getDalamNegeri']);
 Route::get('/unit-kerja/luar-negeri', [UnitKerjaController::class, 'getLuarNegeri']);
