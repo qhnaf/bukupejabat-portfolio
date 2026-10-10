@@ -70,16 +70,6 @@ export default function PublicPage() {
         const cfg = PDF_CONFIG[type];
         trackHit(action);
 
-        // Buka window preview secara SINKRON (sebelum await apapun)
-        // agar tidak diblokir popup blocker browser
-        let previewWindow = null;
-        if (action === 'preview') {
-            previewWindow = window.open('', '_blank');
-            if (previewWindow) {
-                previewWindow.document.write('<p style="font-family:sans-serif;text-align:center;margin-top:40px">Memuat preview PDF...</p>');
-            }
-        }
-
         Swal.fire({
             title: cfg.loadingTitle,
             text: 'Sedang menyusun daftar pejabat per orang...',
@@ -254,15 +244,12 @@ export default function PublicPage() {
                 Swal.close();
                 Swal.fire({ icon: 'success', title: 'Berhasil!', text: `PDF Pejabat ${cfg.label} berhasil diunduh.`, timer: 2000, showConfirmButton: false });
             } else {
-                if (previewWindow && !previewWindow.closed) {
-                    // Tulis PDF ke window yang sudah dibuka sinkron tadi
-                    const pdfBlob = doc.output('bloburl');
-                    previewWindow.location.href = pdfBlob;
-                    Swal.close();
+                const pdfBlob = doc.output('bloburl');
+                const previewWindow = window.open(pdfBlob, '_blank');
+                Swal.close();
+                if (previewWindow) {
                     Swal.fire({ icon: 'success', title: 'Berhasil!', text: `Preview PDF Pejabat ${cfg.label} berhasil dibuka di tab baru.`, timer: 2000, showConfirmButton: false });
                 } else {
-                    // Fallback: window diblokir → unduh langsung
-                    Swal.close();
                     doc.save(cfg.fileName);
                     Swal.fire({ icon: 'info', title: 'Tab preview diblokir', text: 'Browser memblokir tab baru, PDF diunduh langsung.', timer: 2500, showConfirmButton: false });
                 }
