@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import Pagination from "../components/Pagination";
-import axios from "axios";
+import api, { endpoints } from "../api/client";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import kemluBg from "../assets/images/logo_kemlu_fix.png";
@@ -50,10 +50,7 @@ export default function DetailKonhor({ konsulId: konsulIdProp, konsulNama }) {
 
     const fetchKonsulDetail = async () => {
         try {
-            const token = localStorage.getItem("token");
-            const response = await axios.get(`/api/konsul-kehormatan/${konsulId}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const response = await api.get(endpoints.konsulKehormatanById(konsulId));
             if (response.data.success) {
                 setKonsulDetail(response.data.data);
             }
@@ -69,9 +66,8 @@ export default function DetailKonhor({ konsulId: konsulIdProp, konsulNama }) {
     const fetchPejabats = async () => {
         setLoading(true);
         try {
-            const token = localStorage.getItem("token");
-            const response = await axios.get(`/api/pejabat-konsul?konsul_id=${konsulId}`, {
-                headers: { Authorization: `Bearer ${token}` }
+            const response = await api.get(endpoints.pejabatKonsul, {
+                params: { konsul_id: konsulId }
             });
             if (response.data.success) {
                 setPejabats(response.data.data);
@@ -109,13 +105,10 @@ export default function DetailKonhor({ konsulId: konsulIdProp, konsulNama }) {
 
         setIsSaving(true);
         try {
-            const token = localStorage.getItem("token");
-            const headers = { Authorization: `Bearer ${token}` };
-
             if (isEditing) {
-                await axios.put(`/api/pejabat-konsul/${editPejabat.id}`, editPejabat, { headers });
+                await api.put(endpoints.pejabatKonsulById(editPejabat.id), editPejabat);
             } else {
-                await axios.post("/api/pejabat-konsul", { ...editPejabat, konsul_id: konsulId }, { headers });
+                await api.post(endpoints.pejabatKonsul, { ...editPejabat, konsul_id: konsulId });
             }
             fetchPejabats();
 
@@ -152,10 +145,7 @@ export default function DetailKonhor({ konsulId: konsulIdProp, konsulNama }) {
             cancelButtonText: "Batal",
         }).then(async (result) => {
             if (result.isConfirmed) {
-                const token = localStorage.getItem("token");
-                await axios.delete(`/api/pejabat-konsul/${id}`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                await api.delete(endpoints.pejabatKonsulById(id));
                 fetchPejabats();
                 Swal.fire({
                     icon: "success",

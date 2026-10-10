@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api, { endpoints } from "../api/client";
 import Swal from "sweetalert2";
 import Modal from "../components/Modal";
 import ConfirmModal from "../components/ConfirmModal";
@@ -28,7 +28,7 @@ export default function DataAdmin() {
 
     const fetchUnits = async () => {
         try {
-            const response = await axios.get("/api/unit-kerja");
+            const response = await api.get(endpoints.unitKerja);
             if (response.data.success) {
                 setUnitsData(response.data.data);
             }
@@ -40,7 +40,7 @@ export default function DataAdmin() {
     const fetchAdmins = async () => {
         try {
             // Panggil API yang baru kita buat
-            const response = await axios.get("/api/users");
+            const response = await api.get(endpoints.users);
 
             if (response.data.success) {
                 // 3. MAPPING DATA (PENTING!)
@@ -89,7 +89,7 @@ export default function DataAdmin() {
 
     const handleAdd = async (newAdmin) => {
         try {
-            const response = await axios.post("/api/users", {
+            const response = await api.post(endpoints.users, {
                 username:      newAdmin.username,
                 email:         newAdmin.email,
                 password:      newAdmin.password,
@@ -128,8 +128,8 @@ export default function DataAdmin() {
     // Fungsi Edit yang sudah disambungkan ke Backend
     const handleSave = async (updated) => {
         try {
-            const response = await axios.put(
-                `/api/users/${updated.id}`,
+            const response = await api.put(
+                endpoints.usersById(updated.id),
                 {
                     username:      updated.username,
                     email:         updated.email,
@@ -163,7 +163,7 @@ export default function DataAdmin() {
     const handleDelete = async () => {
         if (!selected) return;
         try {
-            const response = await axios.delete(`/api/users/${selected.id}`);
+            const response = await api.delete(endpoints.usersById(selected.id));
             if (response.data.success) {
                 setDeleteOpen(false);
                 fetchAdmins();

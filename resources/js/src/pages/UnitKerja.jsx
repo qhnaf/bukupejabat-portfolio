@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api, { endpoints } from "../api/client";
 import Pagination from "../components/Pagination";
 import Swal from "sweetalert2";
 
@@ -78,9 +78,7 @@ export default function UnitKerja() {
     const fetchUnits = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(
-                "/api/unit-kerja",
-            );
+            const response = await api.get(endpoints.unitKerja);
             const result = response.data.data || [];
             setUnits(result);
             setCurrentPage(1);
@@ -122,8 +120,8 @@ export default function UnitKerja() {
         e.preventDefault();
         setIsUpdating(true);
         try {
-            await axios.put(
-                `/api/unit-kerja/${editData.id}`,
+            await api.put(
+                endpoints.unitKerjaById(editData.id),
                 editData,
             );
             setIsEditModalOpen(false);

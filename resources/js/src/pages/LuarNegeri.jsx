@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api, { endpoints } from "../api/client";
 import Pagination from "../components/Pagination";
 import Swal from "sweetalert2";
 import { jsPDF } from "jspdf";
@@ -81,10 +81,7 @@ export default function LuarNegeri() {
     const fetchLuarNegeri = async () => {
         setLoading(true);
         try {
-            const token = localStorage.getItem("token");
-            const response = await axios.get("/api/unit-kerja/luar-negeri", {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const response = await api.get(endpoints.unitKerjaLuarNegeri);
             setUnits(response.data.data || []);
         } catch (error) {
             console.error("Gagal mengambil data:", error);
@@ -122,8 +119,8 @@ export default function LuarNegeri() {
         e.preventDefault();
         setIsUpdating(true);
         try {
-            await axios.put(
-                `/api/unit-kerja/${editData.id}`,
+            await api.put(
+                endpoints.unitKerjaById(editData.id),
                 editData,
             );
             setIsEditModalOpen(false);
@@ -164,7 +161,7 @@ export default function LuarNegeri() {
 
         try {
             // Ambil data dari API Pegawai
-            const response = await axios.get("/api/pegawai");
+            const response = await api.get(endpoints.pegawai);
             const allPegawai = response.data.data || [];
 
             const doc = new jsPDF();

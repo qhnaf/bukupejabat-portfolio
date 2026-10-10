@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api, { endpoints } from "../api/client";
 import { jsPDF } from "jspdf"; // TAMBAHAN: Import jsPDF
 import autoTable from "jspdf-autotable"; // TAMBAHAN: Import autoTable
 import Swal from "sweetalert2"; // TAMBAHAN: Import SweetAlert2
@@ -51,13 +51,11 @@ export default function DashboardAdmin() {
 
     const fetchPublicStats = async () => {
         try {
-            const token = localStorage.getItem("token");
             const params = {};
             if (publicStatsStartDate) params.start_date = publicStatsStartDate;
             if (publicStatsEndDate) params.end_date = publicStatsEndDate;
 
-            const response = await axios.get("/api/public-activities/stats", {
-                headers: { Authorization: `Bearer ${token}` },
+            const response = await api.get(endpoints.publicActivitiesStats, {
                 params
             });
             if (response.data.success) {
@@ -109,15 +107,12 @@ export default function DashboardAdmin() {
 
     const fetchStats = async () => {
         try {
-            const token = localStorage.getItem("token");
-            const headers = { Authorization: `Bearer ${token}` };
-
             const [dashboardResponse, dalamNegeriResponse, luarNegeriResponse, konhorResponse] =
                 await Promise.all([
-                    axios.get("/api/dashboard/stats", { headers }),
-                    axios.get("/api/unit-kerja/dalam-negeri", { headers }),
-                    axios.get("/api/unit-kerja/luar-negeri", { headers }),
-                    axios.get("/api/konsul-kehormatan", { headers }),
+                    api.get(endpoints.dashboardStats),
+                    api.get(endpoints.unitKerjaDalamNegeri),
+                    api.get(endpoints.unitKerjaLuarNegeri),
+                    api.get(endpoints.konsulKehormatan),
                 ]);
 
             if (dashboardResponse.data.success) {
@@ -151,13 +146,10 @@ export default function DashboardAdmin() {
         });
 
         try {
-            const token = localStorage.getItem("token");
-            const headers = { Authorization: `Bearer ${token}` };
-
-            const unitRes = await axios.get("/api/unit-kerja/dalam-negeri", { headers });
+            const unitRes = await api.get(endpoints.unitKerjaDalamNegeri);
             const unitsDalamNegeri = unitRes.data.data || [];
 
-            const pegRes = await axios.get("/api/pegawai", { headers });
+            const pegRes = await api.get(endpoints.pegawai);
             const allPegawai = pegRes.data.data || [];
 
             if (unitsDalamNegeri.length === 0) {
@@ -360,13 +352,10 @@ export default function DashboardAdmin() {
         });
 
         try {
-            const token = localStorage.getItem("token");
-            const headers = { Authorization: `Bearer ${token}` };
-
-            const unitRes = await axios.get("/api/unit-kerja/luar-negeri", { headers });
+            const unitRes = await api.get(endpoints.unitKerjaLuarNegeri);
             const unitsLuarNegeri = unitRes.data.data || [];
 
-            const pegRes = await axios.get("/api/pegawai", { headers });
+            const pegRes = await api.get(endpoints.pegawai);
             const allPegawai = pegRes.data.data || [];
 
             if (unitsLuarNegeri.length === 0) {

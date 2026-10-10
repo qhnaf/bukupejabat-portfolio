@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import axios from 'axios';
+import api, { endpoints } from '../api/client';
 
 export default function SyncData() {
     const [isSyncing, setIsSyncing] = useState(false);
@@ -26,16 +26,9 @@ export default function SyncData() {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
 
-    const getAuthHeaders = () => {
-        const token = localStorage.getItem("token");
-        return { Authorization: `Bearer ${token}` };
-    };
-
     const fetchConfig = async () => {
         try {
-            const response = await axios.get("/api/sync-config", {
-                headers: getAuthHeaders()
-            });
+            const response = await api.get(endpoints.syncConfig);
             if (response.data.success) {
                 const cfg = response.data.data;
                 setApiUrl(cfg.api_url || '');
@@ -57,10 +50,7 @@ export default function SyncData() {
             if (startDate) params.start_date = startDate;
             if (endDate) params.end_date = endDate;
 
-            const response = await axios.get("/api/sync-logs", {
-                headers: getAuthHeaders(),
-                params
-            });
+            const response = await api.get(endpoints.syncLogs, { params });
             if (response.data.success) {
                 setLogs(response.data.data);
             }
@@ -80,12 +70,11 @@ export default function SyncData() {
 
     const handleExport = () => {
         const token = localStorage.getItem("token");
-        let url = `/api/sync-logs/export?token=${token}`;
+        let url = `${endpoints.syncLogsExport}?token=${token}`;
         if (startDate) url += `&start_date=${startDate}`;
         if (endDate) url += `&end_date=${endDate}`;
 
-        axios.get(url, {
-            headers: getAuthHeaders(),
+        api.get(url, {
             responseType: 'blob'
         }).then((response) => {
             const urlBlob = window.URL.createObjectURL(new Blob([response.data]));
@@ -126,9 +115,7 @@ export default function SyncData() {
         setIsSyncing(true);
 
         try {
-            const response = await axios.post("/api/sync-data/trigger", { method }, {
-                headers: getAuthHeaders()
-            });
+            const response = await api.post(endpoints.syncTrigger, { method });
 
             setIsSyncing(false);
 
@@ -193,9 +180,7 @@ export default function SyncData() {
         });
 
         try {
-            const response = await axios.post("/api/sync-data/test-connection", {}, {
-                headers: getAuthHeaders()
-            });
+            const response = await api.post(endpoints.syncTestConnection, {});
 
             if (response.data.success) {
                 Swal.fire({
@@ -224,7 +209,7 @@ export default function SyncData() {
 
     const handleSaveConfig = async () => {
         try {
-            const response = await axios.post("/api/sync-config", {
+            const response = await api.post(endpoints.syncConfig, {
                 api_url: apiUrl,
                 api_key: apiKey,
                 http_method: httpMethod,
@@ -232,8 +217,6 @@ export default function SyncData() {
                 auto_sync_type: autoSyncType,
                 auto_sync_day: syncDay,
                 auto_sync_date: parseInt(syncDate),
-            }, {
-                headers: getAuthHeaders()
             });
 
             if (response.data.success) {

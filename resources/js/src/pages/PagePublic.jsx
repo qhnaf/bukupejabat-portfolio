@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api, { endpoints } from "../api/client";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import Swal from "sweetalert2";
@@ -22,7 +22,7 @@ const PDF_ALLOWED_KEYWORDS = [
 
 const PDF_CONFIG = {
     dalam: {
-        url: "/api/unit-kerja/dalam-negeri",
+        url: endpoints.unitKerjaDalamNegeri,
         title: "DAFTAR PEJABAT DALAM NEGERI",
         label: "Dalam Negeri",
         loadingTitle: "Memproses PDF...",
@@ -35,7 +35,7 @@ const PDF_CONFIG = {
         remapJabatan: null,
     },
     luar: {
-        url: "/api/unit-kerja/luar-negeri",
+        url: endpoints.unitKerjaLuarNegeri,
         title: "DAFTAR PEJABAT LUAR NEGERI",
         label: "Luar Negeri",
         loadingTitle: "Memproses PDF Luar Negeri...",
@@ -60,7 +60,7 @@ export default function PublicPage() {
 
     const trackHit = async (type) => {
         try {
-            await axios.post("/api/public-activities/hit", { type });
+            await api.post(endpoints.publicActivitiesHit, { type });
         } catch (error) {
             console.error("Gagal mencatat log aktivitas:", error);
         }
@@ -89,8 +89,8 @@ export default function PublicPage() {
 
         try {
             const [unitsRes, pegawaiRes] = await Promise.all([
-                axios.get(cfg.url),
-                axios.get("/api/pegawai")
+                api.get(cfg.url),
+                api.get(endpoints.pegawai)
             ]);
             const filteredUnits = unitsRes.data.data || [];
             const allPegawai = pegawaiRes.data.data || [];
@@ -284,10 +284,10 @@ export default function PublicPage() {
         });
 
         try {
-            const urlUnits = type === 'dalam' ? "/api/unit-kerja/dalam-negeri" : "/api/unit-kerja/luar-negeri";
+            const urlUnits = type === 'dalam' ? endpoints.unitKerjaDalamNegeri : endpoints.unitKerjaLuarNegeri;
             const [unitsRes, pegawaiRes] = await Promise.all([
-                axios.get(urlUnits),
-                axios.get("/api/pegawai")
+                api.get(urlUnits),
+                api.get(endpoints.pegawai)
             ]);
 
             const filteredUnits = unitsRes.data.data || [];

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // JANGAN LUPA: npm install axios
+import api, { endpoints } from "../api/client";
 import BgImage from "../assets/images/gedung-pancasila.jpg";
 
 export default function Login({ onLogin }) {
@@ -110,8 +110,8 @@ export default function Login({ onLogin }) {
 
         try {
             // 1. TEMBAK API LARAVEL
-            const response = await axios.post(
-                "/api/login",
+            const response = await api.post(
+                endpoints.login,
                 {
                     email: email,
                     password: password,

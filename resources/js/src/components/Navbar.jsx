@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api, { endpoints } from "../api/client";
 import Logo from "../assets/images/logo-kemlu.png";
 
 export default function Navbar({ onSignOut, onToggleSidebar, sidebarOpen }) {
@@ -17,15 +17,7 @@ export default function Navbar({ onSignOut, onToggleSidebar, sidebarOpen }) {
 
             // Lapor ke Laravel (Agar tercatat di Activity Log)
             if (token) {
-                await axios.post(
-                    "/api/logout",
-                    {},
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    },
-                );
+                await api.post(endpoints.logout, {});
             }
         } catch (error) {
             console.error("Gagal lapor logout ke server", error);

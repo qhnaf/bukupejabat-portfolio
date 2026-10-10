@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api, { endpoints } from "../api/client";
 import Swal from "sweetalert2";
 
 export default function AccountSettings() {
@@ -21,7 +21,6 @@ export default function AccountSettings() {
             try {
                 const userName = localStorage.getItem('user_name');
                 const userDivisi = localStorage.getItem('user_divisi');
-                const token = localStorage.getItem('token');
 
                 if (!userName) {
                     console.error("Data user_name tidak ditemukan di Local Storage.");
@@ -34,9 +33,7 @@ export default function AccountSettings() {
                     unit_kerja: userDivisi || "Pusat / Semua Unit",
                 }));
 
-                const response = await axios.get("/api/users", {
-                    headers: token ? { Authorization: `Bearer ${token}` } : {}
-                });
+                const response = await api.get(endpoints.users);
 
                 const allUsers = response.data.data;
                 const matchedUser = allUsers.find(u => u.username === userName);
@@ -116,7 +113,7 @@ export default function AccountSettings() {
         }
 
         try {
-            await axios.put(`/api/users/${formData.id}`, payload);
+            await api.put(endpoints.usersById(formData.id), payload);
 
             localStorage.setItem('user_name', formData.nama);
 

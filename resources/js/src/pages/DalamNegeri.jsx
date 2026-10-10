@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api, { endpoints } from "../api/client";
 import Pagination from "../components/Pagination";
 import Swal from "sweetalert2";
 import { jsPDF } from "jspdf";
@@ -84,14 +84,9 @@ export default function DalamNegeri() {
     const fetchDalamNegeri = async () => {
         setLoading(true);
         try {
-            const token = localStorage.getItem("token");
             const [unitRes, pegRes] = await Promise.all([
-                axios.get("/api/unit-kerja/dalam-negeri", {
-                    headers: { Authorization: `Bearer ${token}` }
-                }),
-                axios.get("/api/pegawai", {
-                    headers: { Authorization: `Bearer ${token}` }
-                })
+                api.get(endpoints.unitKerjaDalamNegeri),
+                api.get(endpoints.pegawai)
             ]);
 
             const allUnits = unitRes.data.data || [];
@@ -185,8 +180,8 @@ export default function DalamNegeri() {
         e.preventDefault();
         setIsUpdating(true);
         try {
-            await axios.put(
-                `/api/unit-kerja/${editData.id}`,
+            await api.put(
+                endpoints.unitKerjaById(editData.id),
                 editData
             );
             setIsEditModalOpen(false);
@@ -224,7 +219,7 @@ export default function DalamNegeri() {
 
         try {
             // Ambil data dari API Pegawai
-            const response = await axios.get("/api/pegawai");
+            const response = await api.get(endpoints.pegawai);
             const allPegawai = response.data.data || [];
 
             // Filter kata kunci jabatan sesuai permintaan

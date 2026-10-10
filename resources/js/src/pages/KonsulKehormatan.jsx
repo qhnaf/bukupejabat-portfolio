@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api, { endpoints } from "../api/client";
 import Pagination from "../components/Pagination";
 import Swal from "sweetalert2";
 import { jsPDF } from "jspdf";
@@ -353,12 +353,9 @@ export default function KonsulKehormatan() {
     const fetchAll = async () => {
         setLoading(true);
         try {
-            const token = localStorage.getItem("token");
-            const headers = { Authorization: `Bearer ${token}` };
-
             const [r1, r2] = await Promise.all([
-                axios.get("/api/konsul-kehormatan", { headers }),
-                axios.get("/api/pejabat-konsul", { headers })
+                api.get(endpoints.konsulKehormatan),
+                api.get(endpoints.pejabatKonsul)
             ]);
 
             if (r1.data.success) setKonsuls(r1.data.data);
@@ -420,15 +417,12 @@ export default function KonsulKehormatan() {
         }
         setSavingKonsul(true);
         try {
-            const token = localStorage.getItem("token");
-            const headers = { Authorization: `Bearer ${token}` };
-
             if (isEditingKonsul) {
-                await axios.put(`/api/konsul-kehormatan/${konsulForm.id}`, konsulForm, { headers });
+                await api.put(endpoints.konsulKehormatanById(konsulForm.id), konsulForm);
                 fetchAll();
                 logActivity("UPDATE", `Memperbarui Konsul Kehormatan: ${konsulForm.kota}, ${konsulForm.negara}`);
             } else {
-                await axios.post("/api/konsul-kehormatan", konsulForm, { headers });
+                await api.post(endpoints.konsulKehormatan, konsulForm);
                 fetchAll();
                 logActivity("CREATE", `Menambah Konsul Kehormatan: ${konsulForm.kota}, ${konsulForm.negara}`);
             }
@@ -455,10 +449,7 @@ export default function KonsulKehormatan() {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const token = localStorage.getItem("token");
-                    await axios.delete(`/api/konsul-kehormatan/${id}`, {
-                        headers: { Authorization: `Bearer ${token}` }
-                    });
+                    await api.delete(endpoints.konsulKehormatanById(id));
                     fetchAll();
                     setPageKonsul(1);
                     Swal.fire({ icon: "success", title: "Berhasil!", text: "Data Konsul Kehormatan berhasil dihapus.", confirmButtonColor: "#0ea5e9" });

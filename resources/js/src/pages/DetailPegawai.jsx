@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import axios from "axios";
+import api, { endpoints } from "../api/client";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import * as XLSX from "xlsx";
@@ -170,10 +170,7 @@ export default function DetailPegawai() {
     const fetchPegawai = async () => {
         setLoading(true);
         try {
-            const token = localStorage.getItem("token");
-            const response = await axios.get(`/api/pegawai/unit/${unitId}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const response = await api.get(endpoints.pegawaiByUnit(unitId));
             setUnits(response.data.data || []);
             setUnitName(response.data.unit_nama || "");
             setUnitProfile(response.data.unit_profil || null);
@@ -201,7 +198,7 @@ export default function DetailPegawai() {
         };
 
         try {
-            await axios.put(`/api/pegawai/${selectedUnit.id}`, data);
+            await api.put(endpoints.pegawaiById(selectedUnit.id), data);
             document.getElementById("modal_edit_pegawai").close();
             fetchPegawai();
             Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Data Pegawai berhasil diperbarui.', confirmButtonColor: '#0ea5e9' });

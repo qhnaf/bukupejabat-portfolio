@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api, { endpoints } from "../api/client";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import Swal from "sweetalert2";
@@ -16,13 +16,11 @@ export default function LogHistory() {
     const fetchLogs = async () => {
         setIsLoading(true);
         try {
-            const token = localStorage.getItem("token");
             const params = {};
             if (startDate) params.start_date = startDate;
             if (endDate) params.end_date = endDate;
             
-            const response = await axios.get("/api/activity-logs", {
-                headers: { Authorization: `Bearer ${token}` },
+            const response = await api.get(endpoints.activityLogs, {
                 params
             });
             if (response.data.success) {

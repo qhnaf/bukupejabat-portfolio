@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "./api/client";
 import { Routes, Route, Navigate, Outlet, useNavigate } from "react-router-dom";
 import Login from "./pages/Login";
 import MainLayout from "./layouts/MainLayout";
@@ -35,20 +35,10 @@ export default function App() {
 
     const navigate = useNavigate();
 
-    // 2. Setup Axios Interceptor agar token otomatis terkirim
+    // 2. Interceptor 401: token kadaluarsa → logout + redirect.
+    //    Pelampiran token Bearer otomatis ditangani di api/client.js.
     useEffect(() => {
-        const requestInterceptor = axios.interceptors.request.use(
-            (config) => {
-                const token = localStorage.getItem("token");
-                if (token) {
-                    config.headers.Authorization = `Bearer ${token}`;
-                }
-                return config;
-            },
-            (error) => Promise.reject(error)
-        );
-
-        const responseInterceptor = axios.interceptors.response.use(
+        const responseInterceptor = api.interceptors.response.use(
             (response) => response,
             (error) => {
                 if (error.response && error.response.status === 401) {
@@ -60,8 +50,7 @@ export default function App() {
         );
 
         return () => {
-            axios.interceptors.request.eject(requestInterceptor);
-            axios.interceptors.response.eject(responseInterceptor);
+            api.interceptors.response.eject(responseInterceptor);
         };
     }, []);
 

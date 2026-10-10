@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api, { endpoints } from "../api/client";
 import Modal from "../components/Modal";
 import ConfirmModal from "../components/ConfirmModal";
 
@@ -40,9 +40,7 @@ export default function DataPegawai() {
         setLoading(true);
         try {
             // Mengambil data dari API Laravel lokal Anda
-            const response = await axios.get(
-                "/api/pegawai",
-            );
+            const response = await api.get(endpoints.pegawai);
 
             // Mapping data dari Database ke variabel state yang ada di UI
             const dbData = response.data.data || [];
@@ -101,8 +99,8 @@ export default function DataPegawai() {
 
     const fetchUnitKerja = async (q = "") => {
         try {
-            const response = await axios.get(
-                "/api/unit-kerja",
+            const response = await api.get(
+                endpoints.unitKerja,
                 { params: { search: q, limit: 100 } },
             );
 
