@@ -47,7 +47,10 @@ return [
     |
     */
 
-    'expiration' => null,
+    // Token berlaku 7 hari (60 menit × 24 jam × 7 hari = 10080 menit).
+    // Setelah kadaluarsa, request berikutnya akan mendapat 401 dan
+    // interceptor di App.jsx akan mengarahkan user ke halaman login.
+    'expiration' => 60 * 24 * 7,
 
     /*
     |--------------------------------------------------------------------------

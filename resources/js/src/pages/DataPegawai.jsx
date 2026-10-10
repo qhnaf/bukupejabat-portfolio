@@ -102,10 +102,12 @@ export default function DataPegawai() {
             const response = await api.get(endpoints.unitKerja);
 
             // Mapping unit kerja dari DB
+            // kd_unker memakai ID numerik (u.id) agar cocok dengan
+            // item.unit_kerja_id di data pegawai (filter tabel memakai ===).
             const dbUnits = response.data.data || [];
             const formattedUnits = dbUnits.map((u) => ({
                 ...u,
-                kd_unker: u.kode_unit_kerja,
+                kd_unker: u.id,
                 nama: u.deskripsi || u.nama_unit_kerja,
             }));
 
