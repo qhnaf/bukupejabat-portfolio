@@ -33,7 +33,7 @@ export default function DataPegawai() {
     // Ambil data dari API saat pertama kali load
     useEffect(() => {
         fetchData();
-        fetchUnitKerja("");
+        fetchUnitKerja();
     }, []);
 
     const fetchData = async () => {
@@ -97,12 +97,9 @@ export default function DataPegawai() {
         );
     };
 
-    const fetchUnitKerja = async (q = "") => {
+    const fetchUnitKerja = async () => {
         try {
-            const response = await api.get(
-                endpoints.unitKerja,
-                { params: { search: q, limit: 100 } },
-            );
+            const response = await api.get(endpoints.unitKerja);
 
             // Mapping unit kerja dari DB
             const dbUnits = response.data.data || [];
@@ -117,14 +114,6 @@ export default function DataPegawai() {
             console.error("Gagal mengambil data unit kerja:", error);
         }
     };
-
-    // Debounce unit search
-    useEffect(() => {
-        const t = setTimeout(() => {
-            fetchUnitKerja(unitSearchTerm);
-        }, 300);
-        return () => clearTimeout(t);
-    }, [unitSearchTerm]);
 
     // --- LOGIKA SEARCH ---
     const filteredData = data.filter((item) => {
