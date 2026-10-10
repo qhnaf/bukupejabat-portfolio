@@ -5,7 +5,7 @@ import { jsPDF } from "jspdf"; // TAMBAHAN: Import jsPDF
 import autoTable from "jspdf-autotable"; // TAMBAHAN: Import autoTable
 import Swal from "sweetalert2"; // TAMBAHAN: Import SweetAlert2
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Legend } from 'recharts';
-import LogHistory from "./LogHistory";
+import LogHistory from "../components/LogHistory";
 import kemluBg from "../assets/images/logo_kemlu_fix.png";
 
 export default function DashboardAdmin() {

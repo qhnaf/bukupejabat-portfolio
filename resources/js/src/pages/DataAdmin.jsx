@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-import Modal from "./Modal";
-import ConfirmModal from "./ConfirmModal";
-import Pagination from "./Pagination";
+import Modal from "../components/Modal";
+import ConfirmModal from "../components/ConfirmModal";
+import Pagination from "../components/Pagination";
 import { logActivity } from "../utils/logActivity";
-import SearchableSelect from "./SearchableSelect";
+import SearchableSelect from "../components/SearchableSelect";
 
 export default function DataAdmin() {
     // 1. Ganti sampleAdmins dengan array kosong dulu
