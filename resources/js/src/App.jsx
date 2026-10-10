@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState, useEffect } from "react";
+import React, { lazy, Suspense, useState, useEffect } from "react";
 import api from "./api/client";
 import { Routes, Route, Navigate, Outlet, useNavigate } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
