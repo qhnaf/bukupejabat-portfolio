@@ -63,7 +63,7 @@ export default function Navbar({ onSignOut, onToggleSidebar, sidebarOpen }) {
                         <div className="h-32 w-42 flex items-center justify-center">
                             <img
                                 src={Logo}
-                                alt="logo"
+                                alt="Logo Buku Pejabat Kementerian Luar Negeri"
                                 className="max-h-14 object-contain"
                             />
                         </div>

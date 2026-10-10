@@ -243,7 +243,7 @@ export default function DataPegawai() {
                                     <path d="m21 21-4.3-4.3"></path>
                                 </g>
                             </svg>
-                            <input type="text" placeholder="Cari unit kerja..." className="grow" value={unitSearchTerm || selectedUnitName} onChange={(e) => {
+                            <input type="text" aria-label="Cari unit kerja" placeholder="Cari unit kerja..." className="grow" value={unitSearchTerm || selectedUnitName} onChange={(e) => {
                                     setUnitSearchTerm(e.target.value);
                                     setShowUnitDropdown(true);
                                 }}
@@ -263,6 +263,7 @@ export default function DataPegawai() {
                                         setUnitSearchTerm("");
                                         setCurrentPage(1);
                                     }}
+                                    aria-label="Hapus pilihan unit kerja"
                                     className="text-slate-400 hover:text-slate-600"
                                 >
                                     ✕
@@ -342,7 +343,7 @@ export default function DataPegawai() {
                                 <path d="m21 21-4.3-4.3"></path>
                             </g>
                         </svg>
-                        <input type="search" placeholder="Cari nama atau NIP..." className="grow" value={searchTerm}
+                        <input type="search" aria-label="Cari nama atau NIP pegawai" placeholder="Cari nama atau NIP..." className="grow" value={searchTerm}
                             onChange={(e) => {
                                 setSearchTerm(e.target.value);
                                 setCurrentPage(1);
@@ -583,7 +584,7 @@ function EditForm({ initialData, onCancel, onSave }) {
                         onChange={(e) =>
                             handleInputChange("nama", e.target.value)
                         }
-                        placeholder="Masukkan nama"
+                        aria-label="Nama" placeholder="Masukkan nama"
                     />
                 </div>
                 <div>
@@ -595,7 +596,7 @@ function EditForm({ initialData, onCancel, onSave }) {
                         onChange={(e) =>
                             handleInputChange("nip", e.target.value)
                         }
-                        placeholder="Masukkan NIP"
+                        aria-label="NIP" placeholder="Masukkan NIP"
                     />
                 </div>
             </div>
@@ -611,7 +612,7 @@ function EditForm({ initialData, onCancel, onSave }) {
                         onChange={(e) =>
                             handleInputChange("ket_unker", e.target.value)
                         }
-                        placeholder="Masukkan unit kerja"
+                        aria-label="Unit Kerja" placeholder="Masukkan unit kerja"
                     />
                 </div>
                 <div>
@@ -623,7 +624,7 @@ function EditForm({ initialData, onCancel, onSave }) {
                         onChange={(e) =>
                             handleInputChange("Jabatan", e.target.value)
                         }
-                        placeholder="Masukkan jabatan"
+                        aria-label="Jabatan" placeholder="Masukkan jabatan"
                     />
                 </div>
             </div>
@@ -639,7 +640,7 @@ function EditForm({ initialData, onCancel, onSave }) {
                         onChange={(e) =>
                             handleInputChange("no_hp", e.target.value)
                         }
-                        placeholder="Masukkan nomor telepon"
+                        aria-label="No. Telepon" placeholder="Masukkan nomor telepon"
                     />
                 </div>
                 <div>
@@ -652,7 +653,7 @@ function EditForm({ initialData, onCancel, onSave }) {
                         onChange={(e) =>
                             handleInputChange("LokasiKerjaName", e.target.value)
                         }
-                        placeholder="Masukkan lokasi"
+                        aria-label="Lokasi" placeholder="Masukkan lokasi"
                     />
                 </div>
             </div>

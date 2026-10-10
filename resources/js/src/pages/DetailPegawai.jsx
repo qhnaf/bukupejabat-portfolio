@@ -484,6 +484,7 @@ export default function DetailPegawai() {
                                 </svg>
                                 <input
                                     type="text"
+                                    aria-label="Cari pegawai"
                                     placeholder="Cari pegawai..."
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -562,17 +563,17 @@ export default function DetailPegawai() {
                 <div className="modal-box bg-white max-w-2xl rounded-3xl p-8 border border-slate-100 shadow-2xl">
                     <div className="flex justify-between items-center mb-6">
                         <h3 className="font-black text-xl text-slate-800 tracking-tight uppercase">Edit Data Pegawai</h3>
-                        <form method="dialog"><button className="btn btn-sm btn-circle btn-ghost text-slate-400">✕</button></form>
+                        <form method="dialog"><button className="btn btn-sm btn-circle btn-ghost text-slate-400" aria-label="Tutup">✕</button></form>
                     </div>
                     <form className="space-y-5" onSubmit={handleUpdate}>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div className="form-control">
                                 <label className="text-[11px] font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest">NIP</label>
-                                <input type="text" value={selectedUnit?.nip || ""} className="input input-bordered w-full bg-slate-50 text-slate-500 border-slate-200 rounded-2xl text-sm font-semibold h-12" readOnly />
+                                <input type="text" value={selectedUnit?.nip || ""} className="input input-bordered w-full bg-slate-50 text-slate-500 border-slate-200 rounded-2xl text-sm font-semibold h-12" readOnly aria-label="NIP" />
                             </div>
                             <div className="form-control">
                                 <label className="text-[11px] font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest">Nama Lengkap</label>
-                                <input type="text" name="nama" defaultValue={selectedUnit?.nama_pegawai || ""} className="input input-bordered w-full bg-white text-slate-800 border-slate-200 focus:ring-4 focus:ring-sky-100 transition-all rounded-2xl text-sm font-semibold h-12" />
+                                <input type="text" name="nama" aria-label="Nama pegawai" defaultValue={selectedUnit?.nama_pegawai || ""} className="input input-bordered w-full bg-white text-slate-800 border-slate-200 focus:ring-4 focus:ring-sky-100 transition-all rounded-2xl text-sm font-semibold h-12" />
                             </div>
                             <div className="form-control">
                                 <label className="text-[11px] font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest">Email</label>
@@ -580,7 +581,7 @@ export default function DetailPegawai() {
                             </div>
                             <div className="form-control">
                                 <label className="text-[11px] font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest">No. Telepon</label>
-                                <input type="text" name="no_handphone" defaultValue={selectedUnit?.telepon || ""} className="input input-bordered w-full bg-white text-slate-800 border-slate-200 focus:ring-4 focus:ring-sky-100 transition-all rounded-2xl text-sm font-semibold h-12" />
+                                <input type="text" name="no_handphone" aria-label="Nomor handphone" defaultValue={selectedUnit?.telepon || ""} className="input input-bordered w-full bg-white text-slate-800 border-slate-200 focus:ring-4 focus:ring-sky-100 transition-all rounded-2xl text-sm font-semibold h-12" />
                             </div>
                         </div>
 
@@ -588,7 +589,7 @@ export default function DetailPegawai() {
                             <label className="text-[11px] font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest flex items-center gap-2">
                                 Jabatan Saat Ini
                             </label>
-                            <input type="text" name="jabatan" defaultValue={selectedUnit?.jabatan || ""} className="input input-bordered w-full bg-white text-slate-800 border-slate-200 focus:ring-4 focus:ring-sky-100 transition-all rounded-2xl text-sm font-semibold h-12" />
+                            <input type="text" name="jabatan" aria-label="Jabatan" defaultValue={selectedUnit?.jabatan || ""} className="input input-bordered w-full bg-white text-slate-800 border-slate-200 focus:ring-4 focus:ring-sky-100 transition-all rounded-2xl text-sm font-semibold h-12" />
                         </div>
 
                         <div className="form-control">
@@ -629,7 +630,7 @@ export default function DetailPegawai() {
                 <div className="modal-box bg-white max-w-2xl rounded-3xl p-8 border border-slate-100 shadow-2xl">
                     <div className="flex justify-between items-center mb-6">
                         <h3 className="font-black text-xl text-slate-800 tracking-tight uppercase">📖 Penjelasan Pengurutan</h3>
-                        <form method="dialog"><button className="btn btn-sm btn-circle btn-ghost text-slate-400">✕</button></form>
+                        <form method="dialog"><button className="btn btn-sm btn-circle btn-ghost text-slate-400" aria-label="Tutup">✕</button></form>
                     </div>
                     <div className="space-y-4 max-h-96 overflow-y-auto">
                         <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl mb-4">

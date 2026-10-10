@@ -192,17 +192,18 @@ export default function Login({ onLogin }) {
 
                         {/* Pesan Error */}
                         {error && (
-                            <div className="mb-4 p-3 bg-red-100 text-red-600 text-sm rounded-lg border border-red-200">
+                            <div role="alert" className="mb-4 p-3 bg-red-100 text-red-600 text-sm rounded-lg border border-red-200">
                                 {error}
                             </div>
                         )}
 
                         <form className="space-y-4" onSubmit={handleLogin}>
                             <div>
-                                <label className="block text-xs font-medium text-slate-600 mb-2">
+                                <label htmlFor="login-email" className="block text-xs font-medium text-slate-600 mb-2">
                                     Email
                                 </label>
                                 <input
+                                    id="login-email"
                                     type="email"
                                     value={email}
                                     onChange={(e) => { setEmail(e.target.value); setEmailError(""); }}
@@ -215,7 +216,7 @@ export default function Login({ onLogin }) {
                                     disabled={isLoading}
                                 />
                                 {emailError && (
-                                    <p className="text-xs text-red-500 mt-1.5 font-medium flex items-center gap-1">
+                                    <p role="alert" className="text-xs text-red-500 mt-1.5 font-medium flex items-center gap-1">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-3.5 flex-shrink-0"><path fillRule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-8-5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5A.75.75 0 0 1 10 5Zm0 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clipRule="evenodd" /></svg>
                                         {emailError}
                                     </p>
@@ -223,11 +224,12 @@ export default function Login({ onLogin }) {
                             </div>
 
                             <div>
-                                <label className="block text-xs font-medium text-slate-600 mb-2">
+                                <label htmlFor="login-password" className="block text-xs font-medium text-slate-600 mb-2">
                                     Password
                                 </label>
                                 <div className="relative">
                                     <input
+                                        id="login-password"
                                         type="password"
                                         value={password}
                                         onChange={(e) => { setPassword(e.target.value); setPasswordError(""); }}
@@ -239,7 +241,7 @@ export default function Login({ onLogin }) {
                                         disabled={isLoading}
                                     />
                                 {passwordError && (
-                                    <p className="text-xs text-red-500 mt-1.5 font-medium flex items-center gap-1">
+                                    <p role="alert" className="text-xs text-red-500 mt-1.5 font-medium flex items-center gap-1">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-3.5 flex-shrink-0"><path fillRule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-8-5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5A.75.75 0 0 1 10 5Zm0 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clipRule="evenodd" /></svg>
                                         {passwordError}
                                     </p>
@@ -249,7 +251,7 @@ export default function Login({ onLogin }) {
 
                             {/* ── CAPTCHA ─────────────────────────────────── */}
                             <div>
-                                <label className="block text-xs font-medium text-slate-600 mb-2">
+                                <label htmlFor="login-captcha" className="block text-xs font-medium text-slate-600 mb-2">
                                     Verifikasi — Selesaikan soal berikut
                                 </label>
 
@@ -259,6 +261,8 @@ export default function Login({ onLogin }) {
                                         ref={canvasRef}
                                         width={220}
                                         height={46}
+                                        role="img"
+                                        aria-label="Soal verifikasi captcha berupa gambar angka"
                                         className="flex-1 rounded-xl border border-slate-200 bg-slate-50 select-none"
                                         style={{ userSelect: 'none', display: 'block' }}
                                     />
@@ -266,6 +270,7 @@ export default function Login({ onLogin }) {
                                         type="button"
                                         onClick={generateCaptcha}
                                         title="Ganti soal"
+                                        aria-label="Ganti soal captcha"
                                         className="flex-shrink-0 px-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors flex items-center justify-center"
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="size-4">
@@ -276,7 +281,9 @@ export default function Login({ onLogin }) {
 
                                 {/* Baris 2: Input jawaban (full width) */}
                                 <input
+                                    id="login-captcha"
                                     type="number"
+                                    inputMode="numeric"
                                     value={captchaInput}
                                     onChange={(e) => setCaptchaInput(e.target.value)}
                                     placeholder="Ketik jawaban di sini..."
@@ -286,7 +293,7 @@ export default function Login({ onLogin }) {
                                 />
 
                                 {captchaError && (
-                                    <p className="text-xs text-red-500 mt-1.5 font-medium">{captchaError}</p>
+                                    <p role="alert" className="text-xs text-red-500 mt-1.5 font-medium">{captchaError}</p>
                                 )}
                             </div>
                             {/* ─────────────────────────────────────────────── */}

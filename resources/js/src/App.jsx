@@ -22,8 +22,8 @@ const SyncData = lazy(() => import("./pages/SyncData"));
 
 function PageLoading() {
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-slate-50">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-sky-500"></div>
+        <div role="status" aria-live="polite" className="min-h-screen flex flex-col items-center justify-center gap-4 bg-slate-50">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-sky-500" aria-hidden="true"></div>
             <p className="text-sm text-slate-500">Memuat halaman...</p>
         </div>
     );

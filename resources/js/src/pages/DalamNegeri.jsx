@@ -458,6 +458,7 @@ export default function DalamNegeri() {
                             <input
                                 type="text"
                                 placeholder="Cari unit kerja..."
+                                aria-label="Cari unit kerja dalam negeri"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className="pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 w-full bg-slate-50"

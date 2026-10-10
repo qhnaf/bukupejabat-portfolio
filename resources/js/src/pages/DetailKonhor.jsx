@@ -370,6 +370,7 @@ export default function DetailKonhor({ konsulId: konsulIdProp, konsulNama }) {
                                 </svg>
                                 <input
                                     type="text"
+                                    aria-label="Cari pejabat"
                                     placeholder="Cari pejabat..."
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
