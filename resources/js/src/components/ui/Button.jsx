@@ -6,11 +6,15 @@ const cx = (...args) => args.filter(Boolean).join(" ");
 
 const VARIANT_CLASSES = {
     primary: "bg-sky-500 text-white hover:bg-sky-600",
+    indigo: "bg-indigo-600 text-white hover:bg-indigo-700",
     danger: "bg-rose-500 text-white hover:bg-rose-600",
     success: "bg-emerald-500 text-white hover:bg-emerald-600",
+    dark: "bg-slate-800 text-white hover:bg-slate-900",
     ghost: "bg-transparent text-slate-500 hover:bg-slate-100",
     outline:
         "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50",
+    outlineIndigo:
+        "bg-white text-indigo-600 border border-indigo-300 hover:bg-indigo-50",
 };
 
 const SIZE_CLASSES = {
@@ -22,7 +26,7 @@ const SIZE_CLASSES = {
 /**
  * Tombol seragam untuk seluruh aplikasi.
  *
- * @param variant  primary | danger | success | ghost | outline
+ * @param variant  primary | indigo | danger | success | dark | ghost | outline | outlineIndigo
  * @param size     sm | md | lg
  * @param fullWidth  true → lebar penuh (mis. tombol submit login)
  * @param className  kelas tambahan (di-merge di belakang variant/size)
@@ -42,7 +46,7 @@ export default function Button({
             type={type}
             disabled={disabled}
             className={cx(
-                "inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-colors cursor-pointer",
+                "inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all cursor-pointer active:scale-[0.98]",
                 "disabled:cursor-not-allowed disabled:opacity-60",
                 VARIANT_CLASSES[variant] || VARIANT_CLASSES.primary,
                 SIZE_CLASSES[size] || SIZE_CLASSES.md,
