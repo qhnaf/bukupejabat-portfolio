@@ -3,8 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import Pagination from "../components/Pagination";
 import api, { endpoints } from "../api/client";
-import { jsPDF } from "jspdf";
-import autoTable from "jspdf-autotable";
+import { loadPdfLibs } from "../utils/pdfLibs";
 import kemluBg from "../assets/images/logo_kemlu_fix.png";
 import { logActivity } from "../utils/logActivity";
 
@@ -180,8 +179,9 @@ export default function DetailKonhor({ konsulId: konsulIdProp, konsulNama }) {
 
     const title = konsulNama || (konsulDetail ? `${konsulDetail.kota}, ${konsulDetail.negara}` : `Memuat...`);
 
-    const downloadPDF = (action = 'preview') => {
+    const downloadPDF = async (action = 'preview') => {
         try {
+            const { jsPDF, autoTable } = await loadPdfLibs();
             const doc = new jsPDF();
             const pageWidth = doc.internal.pageSize.width;
             const pageHeight = doc.internal.pageSize.height;

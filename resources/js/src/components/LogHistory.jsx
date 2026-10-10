@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import api, { endpoints } from "../api/client";
-import { jsPDF } from "jspdf";
-import autoTable from "jspdf-autotable";
+import { loadPdfLibs } from "../utils/pdfLibs";
 import Swal from "sweetalert2";
 
 export default function LogHistory() {
@@ -37,7 +36,7 @@ export default function LogHistory() {
         fetchLogs();
     }, [startDate, endDate]);
 
-    const handleExportPDF = (action = 'preview') => {
+    const handleExportPDF = async (action = 'preview') => {
         if (filteredLogs.length === 0) {
             Swal.fire('Informasi', 'Tidak ada data log aktivitas untuk diekspor.', 'info');
             return;
@@ -51,6 +50,7 @@ export default function LogHistory() {
         });
 
         try {
+            const { jsPDF, autoTable } = await loadPdfLibs();
             const doc = new jsPDF();
             const pageWidth = doc.internal.pageSize.width;
 

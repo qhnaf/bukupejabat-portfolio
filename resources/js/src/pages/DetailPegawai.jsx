@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import api, { endpoints } from "../api/client";
-import { jsPDF } from "jspdf";
-import autoTable from "jspdf-autotable";
-import * as XLSX from "xlsx";
+import { loadPdfLibs } from "../utils/pdfLibs";
 import Pagination from "../components/Pagination";
 import Swal from "sweetalert2";
 
@@ -210,7 +208,8 @@ export default function DetailPegawai() {
         }
     };
 
-    const downloadExcel = () => {
+    const downloadExcel = async () => {
+        const XLSX = await import("xlsx");
         const aoa = [
             ["DAFTAR PEJABAT " + (source === "luar" ? "LUAR NEGERI" : "DALAM NEGERI")],
             [unitName ? unitName.toUpperCase() : "UNIT TIDAK DIKETAHUI"],
@@ -286,8 +285,9 @@ export default function DetailPegawai() {
         logActivity("DOWNLOAD CSV", `Mengunduh CSV Daftar Pejabat ${unitName || ""}`);
     };
 
-    const downloadPDF = (action = 'preview') => {
+    const downloadPDF = async (action = 'preview') => {
         try {
+            const { jsPDF, autoTable } = await loadPdfLibs();
             const doc = new jsPDF();
             const pageWidth = doc.internal.pageSize.width;
             const pageHeight = doc.internal.pageSize.height;

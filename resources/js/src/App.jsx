@@ -1,22 +1,33 @@
-import React, { useState, useEffect } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import api from "./api/client";
 import { Routes, Route, Navigate, Outlet, useNavigate } from "react-router-dom";
-import Login from "./pages/Login";
 import MainLayout from "./layouts/MainLayout";
-import DashboardAdmin from "./pages/DashboardAdmin";
-import DataPegawai from "./pages/DataPegawai";
-import PerSatker from "./pages/PerSatker";
-import DalamNegeri from "./pages/DalamNegeri";
-import LuarNegeri from "./pages/LuarNegeri";
-import DetailPegawai from "./pages/DetailPegawai";
-import UnitKerja from "./pages/UnitKerja";
-import DataAdmin from "./pages/DataAdmin";
-import PengaturanAkun from "./pages/PengaturanAkun";
-import PagePublic from "./pages/PagePublic";
-import KonsulKehormatan from "./pages/KonsulKehormatan";
-import DetailKehormatan from "./pages/DetailKonhor";
-import SyncData from "./pages/SyncData";
-// import TambahPegawai from "./pages/TambahPegawai";
+import ErrorBoundary from "./components/ErrorBoundary";
+
+// Halaman dimuat lazy (per-route) agar chunk utama tetap kecil.
+const PagePublic = lazy(() => import("./pages/PagePublic"));
+const Login = lazy(() => import("./pages/Login"));
+const DashboardAdmin = lazy(() => import("./pages/DashboardAdmin"));
+const DataPegawai = lazy(() => import("./pages/DataPegawai"));
+const PerSatker = lazy(() => import("./pages/PerSatker"));
+const DalamNegeri = lazy(() => import("./pages/DalamNegeri"));
+const LuarNegeri = lazy(() => import("./pages/LuarNegeri"));
+const DetailPegawai = lazy(() => import("./pages/DetailPegawai"));
+const UnitKerja = lazy(() => import("./pages/UnitKerja"));
+const DataAdmin = lazy(() => import("./pages/DataAdmin"));
+const PengaturanAkun = lazy(() => import("./pages/PengaturanAkun"));
+const KonsulKehormatan = lazy(() => import("./pages/KonsulKehormatan"));
+const DetailKehormatan = lazy(() => import("./pages/DetailKonhor"));
+const SyncData = lazy(() => import("./pages/SyncData"));
+
+function PageLoading() {
+    return (
+        <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-slate-50">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-sky-500"></div>
+            <p className="text-sm text-slate-500">Memuat halaman...</p>
+        </div>
+    );
+}
 
 function ProtectedLayout({ onSignOut }) {
     return (
@@ -71,58 +82,62 @@ export default function App() {
     };
 
     return (
-        <Routes>
-            <Route path="/" element={<PagePublic />} />
-            <Route path="/public" element={<Navigate to="/" replace />} />
+        <ErrorBoundary>
+            <Suspense fallback={<PageLoading />}>
+                <Routes>
+                    <Route path="/" element={<PagePublic />} />
+                    <Route path="/public" element={<Navigate to="/" replace />} />
 
-            <Route
-                path="/login"
-                element={
-                    authed ? (
-                        <Navigate to="/dashboard" replace />
-                    ) : (
-                        <Login onLogin={handleLogin} />
-                    )
-                }
-            />
+                    <Route
+                        path="/login"
+                        element={
+                            authed ? (
+                                <Navigate to="/dashboard" replace />
+                            ) : (
+                                <Login onLogin={handleLogin} />
+                            )
+                        }
+                    />
 
-            <Route
-                element={
-                    authed ? (
-                        <ProtectedLayout onSignOut={handleSignOut} />
-                    ) : (
-                        <Navigate to="/login" replace />
-                    )
-                }
-            >
-                <Route path="/dashboard" element={<DashboardAdmin />} />
-                <Route path="/pegawai" element={<DataPegawai />} />
-                <Route path="/satkerja" element={<PerSatker />} />
-                <Route path="/satkerja/dalam-negeri" element={<DalamNegeri />} />
-                <Route path="/satkerja/luar-negeri" element={<LuarNegeri />} />
-                <Route
-                    path="/detail-pegawai/:unitId"
-                    element={<DetailPegawai />}
-                />
-                <Route path="/admin" element={<DataAdmin />} />
-                {localStorage.getItem("user_role") === "superadmin" && (
-                    <>
-                        <Route path="/unit-kerja" element={<UnitKerja />} />
-                        <Route path="/unit-kerja/form" element={<UnitKerja />} />
-                        <Route path="/pengaturan/sync-data" element={<SyncData />} />
-                    </>
-                )}
-                <Route path="/pengaturan/akun" element={<PengaturanAkun />} />
-                <Route path="/konsul-kehormatan" element={<KonsulKehormatan />} />
-                <Route path="/konsul-kehormatan/:konsulId" element={<DetailKehormatan />} />
-            </Route>
+                    <Route
+                        element={
+                            authed ? (
+                                <ProtectedLayout onSignOut={handleSignOut} />
+                            ) : (
+                                <Navigate to="/login" replace />
+                            )
+                        }
+                    >
+                        <Route path="/dashboard" element={<DashboardAdmin />} />
+                        <Route path="/pegawai" element={<DataPegawai />} />
+                        <Route path="/satkerja" element={<PerSatker />} />
+                        <Route path="/satkerja/dalam-negeri" element={<DalamNegeri />} />
+                        <Route path="/satkerja/luar-negeri" element={<LuarNegeri />} />
+                        <Route
+                            path="/detail-pegawai/:unitId"
+                            element={<DetailPegawai />}
+                        />
+                        <Route path="/admin" element={<DataAdmin />} />
+                        {localStorage.getItem("user_role") === "superadmin" && (
+                            <>
+                                <Route path="/unit-kerja" element={<UnitKerja />} />
+                                <Route path="/unit-kerja/form" element={<UnitKerja />} />
+                                <Route path="/pengaturan/sync-data" element={<SyncData />} />
+                            </>
+                        )}
+                        <Route path="/pengaturan/akun" element={<PengaturanAkun />} />
+                        <Route path="/konsul-kehormatan" element={<KonsulKehormatan />} />
+                        <Route path="/konsul-kehormatan/:konsulId" element={<DetailKehormatan />} />
+                    </Route>
 
-            <Route
-                path="*"
-                element={
-                    <Navigate to="/" replace />
-                }
-            />
-        </Routes>
+                    <Route
+                        path="*"
+                        element={
+                            <Navigate to="/" replace />
+                        }
+                    />
+                </Routes>
+            </Suspense>
+        </ErrorBoundary>
     );
 }

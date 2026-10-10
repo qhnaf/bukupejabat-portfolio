@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api, { endpoints } from "../api/client";
 import Pagination from "../components/Pagination";
 import Swal from "sweetalert2";
-import { jsPDF } from "jspdf";
-import autoTable from "jspdf-autotable";
+import { loadPdfLibs } from "../utils/pdfLibs";
 import kemluBg from "../assets/images/logo_kemlu_fix.png";
 import { logActivity } from "../utils/logActivity";
 
@@ -164,6 +163,7 @@ export default function LuarNegeri() {
             const response = await api.get(endpoints.pegawai);
             const allPegawai = response.data.data || [];
 
+            const { jsPDF, autoTable } = await loadPdfLibs();
             const doc = new jsPDF();
             const pageWidth = doc.internal.pageSize.width;
             const pageHeight = doc.internal.pageSize.height;

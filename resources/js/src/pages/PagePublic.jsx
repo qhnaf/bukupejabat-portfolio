@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import api, { endpoints } from "../api/client";
-import { jsPDF } from "jspdf";
-import autoTable from "jspdf-autotable";
+import { loadPdfLibs } from "../utils/pdfLibs";
 import Swal from "sweetalert2";
 import kemluBg from "../assets/images/logo-kemlu-flipbook.png";
 import watermarkImg from "../assets/images/logo_kemlu_fix.png";
-import FlipbookViewer from "../components/FlipbookViewer";
+// FlipbookViewer memuat react-pdf (berat) — dimuat hanya saat flipbook dibuka.
+const FlipbookViewer = lazy(() => import("../components/FlipbookViewer"));
 
 const BASE_INFO_ROWS = [
     { label: "Alamat", field: "alamat" },
@@ -85,6 +85,7 @@ export default function PublicPage() {
             const filteredUnits = unitsRes.data.data || [];
             const allPegawai = pegawaiRes.data.data || [];
 
+            const { jsPDF, autoTable } = await loadPdfLibs();
             const doc = new jsPDF();
             const pageWidth = doc.internal.pageSize.width;
             const pageHeight = doc.internal.pageSize.height;
@@ -458,12 +459,14 @@ export default function PublicPage() {
 
             {/* FLIPBOOK MODAL */}
             {isFlipbookOpen && (
-                <FlipbookViewer
-                    title={flipbookTitle}
-                    pages={flipbookData}
-                    bgImage={kemluBg}
-                    onClose={() => setIsFlipbookOpen(false)}
-                />
+                <Suspense fallback={null}>
+                    <FlipbookViewer
+                        title={flipbookTitle}
+                        pages={flipbookData}
+                        bgImage={kemluBg}
+                        onClose={() => setIsFlipbookOpen(false)}
+                    />
+                </Suspense>
             )}
         </div>
     );

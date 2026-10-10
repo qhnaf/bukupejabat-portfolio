@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api, { endpoints } from "../api/client";
-import { jsPDF } from "jspdf"; // TAMBAHAN: Import jsPDF
-import autoTable from "jspdf-autotable"; // TAMBAHAN: Import autoTable
+import { loadPdfLibs } from "../utils/pdfLibs";
 import Swal from "sweetalert2"; // TAMBAHAN: Import SweetAlert2
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Legend } from 'recharts';
 import LogHistory from "../components/LogHistory";
@@ -164,6 +163,7 @@ export default function DashboardAdmin() {
                 "kepala biro", "kepala bagian", "kepala subbagian"
             ];
 
+            const { jsPDF, autoTable } = await loadPdfLibs();
             const doc = new jsPDF();
             const pageWidth = doc.internal.pageSize.width;
             const pageHeight = doc.internal.pageSize.height;
@@ -363,6 +363,7 @@ export default function DashboardAdmin() {
                 return;
             }
 
+            const { jsPDF, autoTable } = await loadPdfLibs();
             const doc = new jsPDF();
             const pageWidth = doc.internal.pageSize.width;
             const pageHeight = doc.internal.pageSize.height;
