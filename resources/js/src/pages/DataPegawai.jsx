@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import api, { endpoints } from "../api/client";
 import Modal from "../components/Modal";
 import ConfirmModal from "../components/ConfirmModal";
+import Input from "../components/ui/Input";
+import Button from "../components/ui/Button";
 
 export default function DataPegawai() {
     // 1. State Utama
@@ -221,9 +223,10 @@ export default function DataPegawai() {
                 </div>
 
                 <div className="flex items-center gap-3 w-full md:w-auto justify-end flex-wrap">
-                    <button
+                    <Button
+                        variant="outline"
                         onClick={fetchData}
-                        className="btn btn-sm btn-ghost border border-slate-300 rounded-xl text-slate-400 hover:bg-slate-100"
+                        className="h-9 px-4"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4"
                         >
@@ -232,12 +235,12 @@ export default function DataPegawai() {
                             />
                         </svg>
                         Refresh
-                    </button>
+                    </Button>
 
                     {/* Searchable Unit Kerja Dropdown */}
                     <div className="relative w-full md:w-48">
-                        <label className="input input-sm bg-white border border-slate-300 text-slate-600 rounded-xl flex items-center gap-2 focus-within:border-sky-500 transition-all">
-                            <svg className="h-4 w-4 opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                        <label className="h-9 px-3 bg-white border border-slate-200 text-slate-600 rounded-xl flex items-center gap-3 text-sm focus-within:border-sky-500 focus-within:ring-2 focus-within:ring-sky-100 transition-all">
+                            <svg className="shrink-0 h-4 w-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                             >
                                 <g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2.5" fill="none" stroke="currentColor"
                                 >
@@ -245,7 +248,7 @@ export default function DataPegawai() {
                                     <path d="m21 21-4.3-4.3"></path>
                                 </g>
                             </svg>
-                            <input type="text" aria-label="Cari unit kerja" placeholder="Cari unit kerja..." className="grow" value={unitSearchTerm || selectedUnitName} onChange={(e) => {
+                            <input type="text" aria-label="Cari unit kerja" placeholder="Cari unit kerja..." className="grow w-full min-w-0 bg-transparent text-slate-700 focus:outline-none pr-2" value={unitSearchTerm || selectedUnitName} onChange={(e) => {
                                     setUnitSearchTerm(e.target.value);
                                     setShowUnitDropdown(true);
                                 }}
@@ -338,20 +341,28 @@ export default function DataPegawai() {
                         )}
                     </div>
 
-                    <label className="input input-sm bg-white border border-slate-300 text-slate-600 rounded-xl flex items-center gap-2 focus-within:border-sky-500 transition-all w-full md:w-64">
-                        <svg className="h-4 w-4 opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2.5" fill="none" stroke="currentColor">
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <path d="m21 21-4.3-4.3"></path>
-                            </g>
-                        </svg>
-                        <input type="search" aria-label="Cari nama atau NIP pegawai" placeholder="Cari nama atau NIP..." className="grow" value={searchTerm}
+                    <div className="w-full md:w-64">
+                        <Input
+                            type="search"
+                            aria-label="Cari nama atau NIP pegawai"
+                            placeholder="Cari nama atau NIP..."
+                            size="sm"
+                            className="h-9"
+                            value={searchTerm}
                             onChange={(e) => {
                                 setSearchTerm(e.target.value);
                                 setCurrentPage(1);
                             }}
+                            icon={
+                                <svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2.5" fill="none" stroke="currentColor">
+                                        <circle cx="11" cy="11" r="8"></circle>
+                                        <path d="m21 21-4.3-4.3"></path>
+                                    </g>
+                                </svg>
+                            }
                         />
-                    </label>
+                    </div>
                 </div>
             </div>
 
@@ -578,10 +589,13 @@ function EditForm({ initialData, onCancel, onSave }) {
             {/* Row 1 */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    <label htmlFor="peg-nama" className="block text-sm font-semibold text-slate-700 mb-2">
                         Nama
                     </label>
-                    <input type="text" className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    <Input
+                        id="peg-nama"
+                        type="text"
+                        size="sm"
                         value={form.nama || ""}
                         onChange={(e) =>
                             handleInputChange("nama", e.target.value)
@@ -590,10 +604,13 @@ function EditForm({ initialData, onCancel, onSave }) {
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    <label htmlFor="peg-nip" className="block text-sm font-semibold text-slate-700 mb-2">
                         NIP
                     </label>
-                    <input type="text" className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    <Input
+                        id="peg-nip"
+                        type="text"
+                        size="sm"
                         value={form.nip || ""}
                         onChange={(e) =>
                             handleInputChange("nip", e.target.value)
@@ -606,10 +623,13 @@ function EditForm({ initialData, onCancel, onSave }) {
             {/* Row 2 */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    <label htmlFor="peg-unker" className="block text-sm font-semibold text-slate-700 mb-2">
                         Unit Kerja
                     </label>
-                    <input type="text" className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    <Input
+                        id="peg-unker"
+                        type="text"
+                        size="sm"
                         value={form.ket_unker || ""}
                         onChange={(e) =>
                             handleInputChange("ket_unker", e.target.value)
@@ -618,10 +638,13 @@ function EditForm({ initialData, onCancel, onSave }) {
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    <label htmlFor="peg-jabatan" className="block text-sm font-semibold text-slate-700 mb-2">
                         Jabatan
                     </label>
-                    <input type="text" className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    <Input
+                        id="peg-jabatan"
+                        type="text"
+                        size="sm"
                         value={form.Jabatan || ""}
                         onChange={(e) =>
                             handleInputChange("Jabatan", e.target.value)
@@ -634,10 +657,13 @@ function EditForm({ initialData, onCancel, onSave }) {
             {/* Row 3 */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    <label htmlFor="peg-telp" className="block text-sm font-semibold text-slate-700 mb-2">
                         No. Telepon
                     </label>
-                    <input type="tel" className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    <Input
+                        id="peg-telp"
+                        type="tel"
+                        size="sm"
                         value={form.no_hp || ""}
                         onChange={(e) =>
                             handleInputChange("no_hp", e.target.value)
@@ -646,11 +672,14 @@ function EditForm({ initialData, onCancel, onSave }) {
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    <label htmlFor="peg-lokasi" className="block text-sm font-semibold text-slate-700 mb-2">
                         {" "}
                         Lokasi
                     </label>
-                    <input type="text" className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    <Input
+                        id="peg-lokasi"
+                        type="text"
+                        size="sm"
                         value={form.LokasiKerjaName || ""}
                         onChange={(e) =>
                             handleInputChange("LokasiKerjaName", e.target.value)
@@ -662,12 +691,12 @@ function EditForm({ initialData, onCancel, onSave }) {
 
             {/* Buttons */}
             <div className="flex justify-end gap-3 pt-4 border-t border-slate-200">
-                <button type="button" onClick={onCancel} className="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-100 transition-colors font-medium">
+                <Button type="button" variant="outline" onClick={onCancel}>
                     Batal
-                </button>
-                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                </Button>
+                <Button type="submit" variant="primary">
                     Simpan Perubahan
-                </button>
+                </Button>
             </div>
         </form>
     );
