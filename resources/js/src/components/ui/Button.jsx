@@ -9,6 +9,7 @@ const VARIANT_CLASSES = {
     indigo: "bg-indigo-600 text-white hover:bg-indigo-700",
     danger: "bg-rose-500 text-white hover:bg-rose-600",
     success: "bg-emerald-500 text-white hover:bg-emerald-600",
+    warning: "bg-amber-500 text-white hover:bg-amber-600",
     dark: "bg-slate-800 text-white hover:bg-slate-900",
     ghost: "bg-transparent text-slate-500 hover:bg-slate-100",
     outline:

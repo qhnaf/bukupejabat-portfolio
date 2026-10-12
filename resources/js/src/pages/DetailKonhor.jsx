@@ -6,6 +6,11 @@ import api, { endpoints } from "../api/client";
 import { loadPdfLibs } from "../utils/pdfLibs";
 import kemluBg from "../assets/images/logo_kemlu_fix.png";
 import { logActivity } from "../utils/logActivity";
+import Modal from "../components/Modal";
+import Input from "../components/ui/Input";
+import Textarea from "../components/ui/Textarea";
+import Button from "../components/ui/Button";
+import Card from "../components/ui/Card";
 
 const EMPTY_PEJABAT = {
     id: "",
@@ -24,6 +29,7 @@ export default function DetailKonhor({ konsulId: konsulIdProp, konsulNama }) {
     const [konsulDetail, setKonsulDetail] = useState(null);
     const [editPejabat, setEditPejabat] = useState(EMPTY_PEJABAT);
     const [isEditing, setIsEditing] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [loading, setLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
@@ -81,17 +87,17 @@ export default function DetailKonhor({ konsulId: konsulIdProp, konsulNama }) {
     const openAddModal = () => {
         setEditPejabat(EMPTY_PEJABAT);
         setIsEditing(false);
-        document.getElementById("modal_detail_konhor").showModal();
+        setIsModalOpen(true);
     };
 
     const openEditModal = (pejabat) => {
         setEditPejabat({ ...pejabat });
         setIsEditing(true);
-        document.getElementById("modal_detail_konhor").showModal();
+        setIsModalOpen(true);
     };
 
     const closeModal = () => {
-        document.getElementById("modal_detail_konhor").close();
+        setIsModalOpen(false);
     };
 
     const handleInputChange = (e) => {
@@ -337,7 +343,7 @@ export default function DetailKonhor({ konsulId: konsulIdProp, konsulNama }) {
     };
 
     return (
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 w-full text-slate-700 mb-5">
+        <Card padding={false} className="mb-5">
             <div className="p-5 border-b border-slate-100 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
                 <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 w-full">
                     <div className="w-full lg:w-auto">
@@ -353,28 +359,19 @@ export default function DetailKonhor({ konsulId: konsulIdProp, konsulNama }) {
                         </h2>
 
                         <div className="flex flex-col md:flex-row items-start md:items-center gap-3">
-                            <div className="relative w-full md:w-72">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                                    />
-                                </svg>
-                                <input
+                            <div className="w-full md:w-72">
+                                <Input
                                     type="text"
                                     aria-label="Cari pejabat"
                                     placeholder="Cari pejabat..."
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-sky-500 w-full bg-slate-50 h-[42px]"
+                                    icon={
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                        </svg>
+                                    }
+                                    className="h-9"
                                 />
                             </div>
 
@@ -385,40 +382,21 @@ export default function DetailKonhor({ konsulId: konsulIdProp, konsulNama }) {
                     </div>
 
                     <div className="w-full lg:w-auto flex justify-end gap-2">
-                        <div className="join border-none shadow-lg shadow-rose-100 rounded-2xl overflow-hidden">
-                            <button
-                                type="button"
-                                onClick={() => downloadPDF('preview')}
-                                className="join-item btn btn-md bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200 px-4 min-h-[42px] h-[42px] transition-all active:scale-95"
-                            >
+                        <div className="flex overflow-hidden rounded-xl shadow-lg shadow-rose-100">
+                            <Button variant="softDanger" onClick={() => downloadPDF('preview')} className="rounded-none h-9 transition-all active:scale-95">
                                 <span className="text-xs font-bold uppercase">Preview</span>
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => downloadPDF('download')}
-                                className="join-item btn btn-md bg-rose-500 hover:bg-rose-600 border-none text-white px-4 min-h-[42px] h-[42px] transition-all active:scale-95"
-                            >
+                            </Button>
+                            <Button variant="danger" onClick={() => downloadPDF('download')} className="rounded-none h-9 transition-all active:scale-95">
                                 <span className="text-xs font-bold uppercase">Unduh PDF</span>
-                            </button>
+                            </Button>
                         </div>
                         {canEdit() && (
-                        <button
-                            type="button"
-                            onClick={openAddModal}
-                            className="btn btn-md w-full md:w-auto bg-sky-500 hover:bg-sky-600 border-none text-white rounded-2xl gap-2 px-8 min-h-[42px] h-[42px] shadow-lg shadow-sky-100 transition-all active:scale-95"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth={2}
-                                stroke="currentColor"
-                                className="w-4 h-4"
-                            >
+                        <Button variant="primary" onClick={openAddModal} className="w-full md:w-auto h-9 shadow-lg shadow-sky-100 transition-all active:scale-95">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                             </svg>
                             <span className="text-xs font-bold uppercase">Tambah</span>
-                        </button>
+                        </Button>
                         )}
                     </div>
                 </div>
@@ -464,26 +442,30 @@ export default function DetailKonhor({ konsulId: konsulIdProp, konsulNama }) {
                                     {canEdit() && (
                                     <td className="px-4 py-3 text-center sticky right-0 bg-white group-hover:bg-[#f6fbff] shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.03)]">
                                         <div className="flex justify-center gap-1">
-                                            <button
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
                                                 type="button"
                                                 onClick={() => openEditModal(p)}
-                                                className="btn btn-sm btn-square btn-ghost text-amber-500 hover:bg-amber-100"
+                                                className="px-2 text-amber-500 hover:bg-amber-100"
                                                 title="Edit Pejabat"
                                             >
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4">
                                                     <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125" />
                                                 </svg>
-                                            </button>
-                                            <button
+                                            </Button>
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
                                                 type="button"
                                                 onClick={() => deletePejabat(p.id)}
-                                                className="btn btn-sm btn-square btn-ghost text-red-400 hover:bg-red-100"
+                                                className="px-2 text-red-400 hover:bg-red-100"
                                                 title="Hapus Pejabat"
                                             >
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4">
                                                     <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                                                 </svg>
-                                            </button>
+                                            </Button>
                                         </div>
                                     </td>
                                     )}
@@ -513,93 +495,59 @@ export default function DetailKonhor({ konsulId: konsulIdProp, konsulNama }) {
                 />
             )}
 
-            <dialog id="modal_detail_konhor" className="modal modal-bottom sm:modal-middle">
-                <div className="modal-box bg-white max-w-2xl rounded-3xl p-8 border border-slate-100 shadow-2xl">
-                    <div className="flex justify-between items-center mb-6">
-                        <h3 className="font-black text-xl text-slate-800 tracking-tight uppercase">
-                            {isEditing ? "Edit Data Konsul Kehormatan" : "Tambah Data Konsul Kehormatan"}
-                        </h3>
-                        <form method="dialog">
-                            <button className="btn btn-sm btn-circle btn-ghost text-slate-400">x</button>
-                        </form>
-                    </div>
-
+            <Modal
+                open={isModalOpen}
+                onClose={closeModal}
+                title={isEditing ? "Edit Data Pejabat Konsul Kehormatan" : "Tambah Data Pejabat Konsul Kehormatan"}
+                size="lg"
+            >
                     <form className="space-y-5" onSubmit={savePejabat}>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div className="form-control">
-                                <label className="text-[11px] font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest">
-                                    Nama
-                                </label>
-                                <input
-                                    type="text"
-                                    name="nama"
-                                    value={editPejabat.nama}
-                                    onChange={handleInputChange}
-                                    required
-                                    className="input input-bordered w-full bg-white text-slate-800 border-slate-200 focus:ring-4 focus:ring-sky-100 transition-all rounded-2xl text-sm font-semibold h-12"
-                                />
-                            </div>
-                            <div className="form-control">
-                                <label className="text-[11px] font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest">
-                                    No. Telepon
-                                </label>
-                                <input
-                                    type="text"
-                                    name="telp"
-                                    value={editPejabat.telp}
-                                    onChange={handleInputChange}
-                                    className="input input-bordered w-full bg-white text-slate-800 border-slate-200 focus:ring-4 focus:ring-sky-100 transition-all rounded-2xl text-sm font-semibold h-12"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="form-control">
-                            <label className="text-[11px] font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest">
-                                Gelar/Jabatan
-                            </label>
-                            <input
+                            <Input
+                                label="Nama"
+                                id="pejabat-nama"
                                 type="text"
-                                name="gelar_jabatan"
-                                value={editPejabat.gelar_jabatan}
+                                name="nama"
+                                value={editPejabat.nama}
                                 onChange={handleInputChange}
-                                className="input input-bordered w-full bg-white text-slate-800 border-slate-200 focus:ring-4 focus:ring-sky-100 transition-all rounded-2xl text-sm font-semibold h-12"
+                                required
+                            />
+                            <Input
+                                label="No. Telepon"
+                                id="pejabat-telp"
+                                type="text"
+                                name="telp"
+                                value={editPejabat.telp}
+                                onChange={handleInputChange}
                             />
                         </div>
 
-                        <div className="form-control">
-                            <label className="text-[11px] font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest">
-                                Alamat
-                            </label>
-                            <textarea
-                                name="alamat"
-                                value={editPejabat.alamat}
-                                onChange={handleInputChange}
-                                className="textarea textarea-bordered w-full bg-white text-slate-800 border-slate-200 focus:ring-4 focus:ring-sky-100 transition-all rounded-2xl text-sm font-semibold min-h-[90px] py-3"
-                            />
-                        </div>
+                        <Input
+                            label="Gelar/Jabatan"
+                            id="pejabat-gelar"
+                            type="text"
+                            name="gelar_jabatan"
+                            value={editPejabat.gelar_jabatan}
+                            onChange={handleInputChange}
+                        />
 
-                        <div className="modal-action flex gap-3 pt-4 border-t border-slate-100">
-                            <button
-                                type="button"
-                                onClick={closeModal}
-                                className="btn btn-ghost text-slate-400 font-bold uppercase text-[10px]"
-                            >
-                                Batal
-                            </button>
-                            <button
-                                type="submit"
-                                disabled={isSaving}
-                                className="btn bg-sky-600 hover:bg-sky-700 border-none text-white px-10 rounded-2xl font-bold text-xs uppercase"
-                            >
+                        <Textarea
+                            label="Alamat"
+                            id="pejabat-alamat"
+                            name="alamat"
+                            rows={3}
+                            value={editPejabat.alamat}
+                            onChange={handleInputChange}
+                        />
+
+                        <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                            <Button variant="ghost" type="button" onClick={closeModal} className="uppercase text-[10px]">Batal</Button>
+                            <Button variant="primary" type="submit" disabled={isSaving} className="uppercase text-xs px-10">
                                 {isSaving ? "Menyimpan..." : "Simpan"}
-                            </button>
+                            </Button>
                         </div>
                     </form>
-                </div>
-                <form method="dialog" className="modal-backdrop">
-                    <button>close</button>
-                </form>
-            </dialog>
-        </div>
+            </Modal>
+        </Card>
     );
 }

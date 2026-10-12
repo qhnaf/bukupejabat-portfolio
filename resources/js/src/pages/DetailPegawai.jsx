@@ -4,6 +4,11 @@ import api, { endpoints } from "../api/client";
 import { loadPdfLibs } from "../utils/pdfLibs";
 import Pagination from "../components/Pagination";
 import Swal from "sweetalert2";
+import Modal from "../components/Modal";
+import Input from "../components/ui/Input";
+import Textarea from "../components/ui/Textarea";
+import Button from "../components/ui/Button";
+import Card from "../components/ui/Card";
 
 // Import gambar background kemlu
 import kemluBg from "../assets/images/logo_kemlu_fix.png";
@@ -20,6 +25,8 @@ export default function DetailPegawai() {
     const [unitProfile, setUnitProfile] = useState(null);
     const [loading, setLoading] = useState(false);
     const [selectedUnit, setSelectedUnit] = useState(null);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
@@ -158,7 +165,7 @@ export default function DetailPegawai() {
 
     const openEditModal = (unit) => {
         setSelectedUnit(unit);
-        document.getElementById("modal_edit_pegawai").showModal();
+        setIsEditModalOpen(true);
     };
 
     useEffect(() => {
@@ -197,7 +204,7 @@ export default function DetailPegawai() {
 
         try {
             await api.put(endpoints.pegawaiById(selectedUnit.id), data);
-            document.getElementById("modal_edit_pegawai").close();
+            setIsEditModalOpen(false);
             fetchPegawai();
             Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Data Pegawai berhasil diperbarui.', confirmButtonColor: '#0ea5e9' });
             logActivity("UPDATE", `Memperbarui data pegawai: ${data.nama}`);
@@ -463,7 +470,7 @@ export default function DetailPegawai() {
     const canEdit = isSuperAdmin || Number(unitId) === Number(userUnitId);
 
     return (
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 w-full text-slate-700 mb-5">
+        <Card padding={false} className="mb-5">
             <div className="p-5 border-b border-slate-100 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
                 <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 w-full">
                     {/* BAGIAN KIRI: Judul, Search, dan Export Buttons */}
@@ -478,36 +485,38 @@ export default function DetailPegawai() {
                         {/* Group Search & Export Buttons */}
                         <div className="flex flex-col md:flex-row items-start md:items-center gap-3">
                             {/* Input Search */}
-                            <div className="relative w-full md:w-72">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
-                                <input
+                            <div className="w-full md:w-64">
+                                <Input
                                     type="text"
                                     aria-label="Cari pegawai"
                                     placeholder="Cari pegawai..."
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-sky-500 w-full bg-slate-50 h-[42px]"
+                                    icon={
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                        </svg>
+                                    }
+                                    className="h-9"
                                 />
                             </div>
 
                             {/* Export Buttons: flex-wrap agar tidak 'penyok' di layar tanggung */}
                             <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-                                <div className="join border-none shadow-sm rounded-2xl overflow-hidden">
-                                    <button onClick={() => downloadPDF('preview')} className="btn btn-md join-item bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200 px-4 min-h-[42px] h-[42px]">
+                                <div className="flex overflow-hidden rounded-xl shadow-sm">
+                                    <Button variant="softDanger" onClick={() => downloadPDF('preview')} className="rounded-none h-9">
                                         <span className="text-xs font-bold uppercase">Preview</span>
-                                    </button>
-                                    <button onClick={() => downloadPDF('download')} className="btn btn-md join-item bg-rose-500 hover:bg-rose-600 border-none text-white px-4 min-h-[42px] h-[42px]">
+                                    </Button>
+                                    <Button variant="danger" onClick={() => downloadPDF('download')} className="rounded-none h-9">
                                         <span className="text-xs font-bold uppercase">Unduh PDF</span>
-                                    </button>
+                                    </Button>
                                 </div>
-                                <button onClick={downloadExcel} className="btn btn-md flex-1 md:flex-none bg-emerald-500 hover:bg-emerald-600 border-none text-white rounded-2xl gap-2 px-5 min-h-[42px] h-[42px]">
+                                <Button variant="success" onClick={downloadExcel} className="flex-1 md:flex-none h-9">
                                     <span className="text-xs font-bold uppercase">Excel</span>
-                                </button>
-                                <button onClick={downloadCSV} className="btn btn-md flex-1 md:flex-none bg-amber-500 hover:bg-amber-600 border-none text-white rounded-2xl gap-2 px-5 min-h-[42px] h-[42px]">
+                                </Button>
+                                <Button variant="warning" onClick={downloadCSV} className="flex-1 md:flex-none h-9">
                                     <span className="text-xs font-bold uppercase">CSV</span>
-                                </button>
+                                </Button>
                             </div>
                         </div>
                     </div>
@@ -543,7 +552,7 @@ export default function DetailPegawai() {
                                     <td className="px-4 py-3 text-sm text-slate-600">{unit.telepon || "-"}</td>
                                     {canEdit && (
                                         <td className="px-4 py-3 text-center sticky right-0 bg-white group-hover:bg-[#f6fbff] shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.03)]">
-                                            <button onClick={() => openEditModal(unit)} className="btn btn-sm btn-square btn-ghost text-amber-500 hover:bg-amber-100"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4"><path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125" /></svg></button>
+                                            <Button variant="ghost" size="sm" onClick={() => openEditModal(unit)} className="px-2 text-amber-500 hover:bg-amber-100" aria-label="Edit pegawai"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4"><path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125" /></svg></Button>
                                         </td>
                                     )}
                                 </tr>
@@ -559,38 +568,55 @@ export default function DetailPegawai() {
                 <Pagination currentPage={currentPage} totalItems={sortedUnits.length} itemsPerPage={itemsPerPage} onPageChange={handlePageChange} onItemsPerPageChange={(newSize) => { setItemsPerPage(newSize); setCurrentPage(1); }} />
             )}
 
-            <dialog id="modal_edit_pegawai" className="modal modal-bottom sm:modal-middle">
-                <div className="modal-box bg-white max-w-2xl rounded-3xl p-8 border border-slate-100 shadow-2xl">
-                    <div className="flex justify-between items-center mb-6">
-                        <h3 className="font-black text-xl text-slate-800 tracking-tight uppercase">Edit Data Pegawai</h3>
-                        <form method="dialog"><button className="btn btn-sm btn-circle btn-ghost text-slate-400" aria-label="Tutup">✕</button></form>
-                    </div>
+            <Modal
+                open={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
+                title="Edit Data Pegawai"
+                size="lg"
+            >
                     <form className="space-y-5" onSubmit={handleUpdate}>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div className="form-control">
-                                <label className="text-[11px] font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest">NIP</label>
-                                <input type="text" value={selectedUnit?.nip || ""} className="input input-bordered w-full bg-slate-50 text-slate-500 border-slate-200 rounded-2xl text-sm font-semibold h-12" readOnly aria-label="NIP" />
-                            </div>
-                            <div className="form-control">
-                                <label className="text-[11px] font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest">Nama Lengkap</label>
-                                <input type="text" name="nama" aria-label="Nama pegawai" defaultValue={selectedUnit?.nama_pegawai || ""} className="input input-bordered w-full bg-white text-slate-800 border-slate-200 focus:ring-4 focus:ring-sky-100 transition-all rounded-2xl text-sm font-semibold h-12" />
-                            </div>
-                            <div className="form-control">
-                                <label className="text-[11px] font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest">Email</label>
-                                <input type="email" name="email" defaultValue={selectedUnit?.email || ""} className="input input-bordered w-full bg-white text-slate-800 border-slate-200 focus:ring-4 focus:ring-sky-100 transition-all rounded-2xl text-sm font-semibold h-12" />
-                            </div>
-                            <div className="form-control">
-                                <label className="text-[11px] font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest">No. Telepon</label>
-                                <input type="text" name="no_handphone" aria-label="Nomor handphone" defaultValue={selectedUnit?.telepon || ""} className="input input-bordered w-full bg-white text-slate-800 border-slate-200 focus:ring-4 focus:ring-sky-100 transition-all rounded-2xl text-sm font-semibold h-12" />
-                            </div>
+                            <Input
+                                label="NIP"
+                                type="text"
+                                value={selectedUnit?.nip || ""}
+                                readOnly
+                                disabled
+                                aria-label="NIP"
+                            />
+                            <Input
+                                label="Nama Lengkap"
+                                id="edit-nama"
+                                type="text"
+                                name="nama"
+                                aria-label="Nama pegawai"
+                                defaultValue={selectedUnit?.nama_pegawai || ""}
+                            />
+                            <Input
+                                label="Email"
+                                id="edit-email"
+                                type="email"
+                                name="email"
+                                defaultValue={selectedUnit?.email || ""}
+                            />
+                            <Input
+                                label="No. Telepon"
+                                id="edit-nohp"
+                                type="text"
+                                name="no_handphone"
+                                aria-label="Nomor handphone"
+                                defaultValue={selectedUnit?.telepon || ""}
+                            />
                         </div>
 
-                        <div className="form-control">
-                            <label className="text-[11px] font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest flex items-center gap-2">
-                                Jabatan Saat Ini
-                            </label>
-                            <input type="text" name="jabatan" aria-label="Jabatan" defaultValue={selectedUnit?.jabatan || ""} className="input input-bordered w-full bg-white text-slate-800 border-slate-200 focus:ring-4 focus:ring-sky-100 transition-all rounded-2xl text-sm font-semibold h-12" />
-                        </div>
+                        <Input
+                            label="Jabatan Saat Ini"
+                            id="edit-jabatan"
+                            type="text"
+                            name="jabatan"
+                            aria-label="Jabatan"
+                            defaultValue={selectedUnit?.jabatan || ""}
+                        />
 
                         <div className="form-control">
                             <label className="text-[11px] font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest">Bobot (Prioritas Urutan)</label>
@@ -601,37 +627,45 @@ export default function DetailPegawai() {
                                 <option value="III">Bobot III</option>
                                 <option value="IV">Bobot IV</option>
                             </select>
-                            <button type="button" onClick={() => document.getElementById("modal_notes_bobot").showModal()} className="text-blue-500 hover:text-blue-700 text-[10px] italic mt-2 font-bold cursor-pointer text-left ml-2">📖 Info: Bobot akan mengatasi urutan Kode Jabatan</button>
+                            <button type="button" onClick={() => setIsNotesModalOpen(true)} className="text-blue-500 hover:text-blue-700 text-[10px] italic mt-2 font-bold cursor-pointer text-left ml-2">📖 Info: Bobot akan mengatasi urutan Kode Jabatan</button>
                         </div>
 
-                        <div className="form-control">
-                            <label className="text-[11px] font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest">Wisma</label>
-                            <textarea name="wisma" defaultValue={selectedUnit?.wisma || ""} className="textarea textarea-bordered w-full bg-white text-slate-800 border-slate-200 focus:ring-4 focus:ring-sky-100 transition-all rounded-2xl text-sm font-semibold min-h-[80px] py-3" />
-                        </div>
+                        <Textarea
+                            label="Wisma"
+                            id="edit-wisma"
+                            name="wisma"
+                            rows={3}
+                            defaultValue={selectedUnit?.wisma || ""}
+                        />
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div className="form-control">
-                                <label className="text-[11px] font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest">TMT Kedatangan</label>
-                                <input type="date" name="tmt_kedatangan" defaultValue={selectedUnit?.tmt_kedatangan || ""} className="input input-bordered w-full bg-white border-slate-200 rounded-2xl text-sm font-semibold h-12" />
-                            </div>
-                            <div className="form-control">
-                                <label className="text-[11px] font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest">TMT Credential</label>
-                                <input type="date" name="tmt_credential" defaultValue={selectedUnit?.tmt_credential || ""} className="input input-bordered w-full bg-white border-slate-200 rounded-2xl text-sm font-semibold h-12" />
-                            </div>
+                            <Input
+                                label="TMT Kedatangan"
+                                id="edit-tmt-kedatangan"
+                                type="date"
+                                name="tmt_kedatangan"
+                                defaultValue={selectedUnit?.tmt_kedatangan || ""}
+                            />
+                            <Input
+                                label="TMT Credential"
+                                id="edit-tmt-credential"
+                                type="date"
+                                name="tmt_credential"
+                                defaultValue={selectedUnit?.tmt_credential || ""}
+                            />
                         </div>
-                        <div className="modal-action flex gap-3 pt-4 border-t border-slate-100">
-                            <button type="button" onClick={() => document.getElementById("modal_edit_pegawai").close()} className="btn btn-ghost text-slate-400 font-bold uppercase text-[10px]">Batal</button>
-                            <button type="submit" disabled={isUpdating} className="btn bg-sky-600 hover:bg-sky-700 border-none text-white px-10 rounded-2xl font-bold text-xs uppercase">{isUpdating ? "Menyimpan..." : "Simpan Perubahan"}</button>
+                        <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                            <Button variant="ghost" type="button" onClick={() => setIsEditModalOpen(false)} className="uppercase text-[10px]">Batal</Button>
+                            <Button variant="primary" type="submit" disabled={isUpdating} className="uppercase text-xs px-10">{isUpdating ? "Menyimpan..." : "Simpan Perubahan"}</Button>
                         </div>
                     </form>
-                </div>
-            </dialog>
+            </Modal>
 
-            <dialog id="modal_notes_bobot" className="modal modal-bottom sm:modal-middle">
-                <div className="modal-box bg-white max-w-2xl rounded-3xl p-8 border border-slate-100 shadow-2xl">
-                    <div className="flex justify-between items-center mb-6">
-                        <h3 className="font-black text-xl text-slate-800 tracking-tight uppercase">📖 Penjelasan Pengurutan</h3>
-                        <form method="dialog"><button className="btn btn-sm btn-circle btn-ghost text-slate-400" aria-label="Tutup">✕</button></form>
-                    </div>
+            <Modal
+                open={isNotesModalOpen}
+                onClose={() => setIsNotesModalOpen(false)}
+                title="📖 Penjelasan Pengurutan"
+                size="lg"
+            >
                     <div className="space-y-4 max-h-96 overflow-y-auto">
                         <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl mb-4">
                             <p className="text-sm font-bold text-slate-700">Urutan Default: <span className="text-blue-600 font-mono">Kode Jabatan</span> ➔ <span className="text-blue-600 font-mono">Abjad Nama</span></p>
@@ -642,9 +676,7 @@ export default function DetailPegawai() {
                             <p className="text-sm text-blue-700 leading-relaxed">Digunakan sebagai penanda prioritas manual untuk menyusun daftar pejabat di posisi paling atas.</p>
                         </div>
                     </div>
-                </div>
-                <form method="dialog" className="modal-backdrop"><button>close</button></form>
-            </dialog>
-        </div>
+            </Modal>
+        </Card>
     );
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api, { endpoints } from "../api/client";
 import Pagination from "../components/Pagination";
@@ -7,6 +7,11 @@ import { loadPdfLibs } from "../utils/pdfLibs";
 import kemluBg from "../assets/images/logo_kemlu_fix.png";
 import { logActivity } from "../utils/logActivity";
 import SearchableSelect from "../components/SearchableSelect";
+import Modal from "../components/Modal";
+import Input from "../components/ui/Input";
+import Textarea from "../components/ui/Textarea";
+import Button from "../components/ui/Button";
+import Card from "../components/ui/Card";
 
 // ─── Local Data Negara (sementara, nanti diganti GET dari API) ───────────────
 const NEGARA_LIST = [
@@ -105,40 +110,23 @@ const EMPTY_PEJABAT = {
 };
 
 // ─── Reusable Field Components ────────────────────────────────────────────────
-const Field = ({ label, required, children }) => (
+const Field = ({ label, required, htmlFor, children }) => (
     <div className="form-control">
-        <label className="text-[11px] font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest">
+        <label
+            htmlFor={htmlFor}
+            className="text-[11px] font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest"
+        >
             {label} {required && <span className="text-red-500">*</span>}
         </label>
         {children}
     </div>
 );
 
-const inputCls =
-    "input input-bordered w-full bg-white text-slate-800 border-slate-200 focus:ring-4 focus:ring-sky-100 transition-all rounded-2xl text-sm font-semibold h-12";
-const textareaCls =
-    "textarea textarea-bordered w-full bg-white text-slate-800 border-slate-200 focus:ring-4 focus:ring-sky-100 transition-all rounded-2xl text-sm font-semibold min-h-[90px] py-3";
-
 // ─── MODAL: Tambah / Edit Konsul Kehormatan ───────────────────────────────────
 function KonsulModal({ isOpen, isEditing, data, onChange, onSubmit, onClose, isSaving, user }) {
-    const modalRef = useRef(null);
-
     // Deteksi apakah inputan harus dikunci
     const unitName = user?.unit_kerja?.nama_unit_kerja || "";
     const isLocked = !isEditing && user?.role !== 'superadmin' && unitName.toUpperCase().startsWith('KBRI');
-
-    useEffect(() => {
-        const modal = modalRef.current;
-        if (!modal) return;
-
-        if (isOpen && !modal.open) {
-            modal.showModal();
-        }
-
-        if (!isOpen && modal.open) {
-            modal.close();
-        }
-    }, [isOpen]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -146,172 +134,142 @@ function KonsulModal({ isOpen, isEditing, data, onChange, onSubmit, onClose, isS
     };
 
     return (
-        <dialog
-            ref={modalRef}
-            className="modal modal-bottom sm:modal-middle"
-            onCancel={(e) => {
-                e.preventDefault();
-                onClose();
-            }}
+        <Modal
+            open={isOpen}
+            onClose={onClose}
+            title={isEditing ? "Edit Konsul Kehormatan" : "Tambah Konsul Kehormatan"}
+            size="lg"
         >
-            <div className="modal-box bg-white max-w-2xl rounded-3xl p-8 border border-slate-100 shadow-2xl">
-                {/* Header */}
-                <div className="flex justify-between items-center mb-6">
-                    <h3 className="font-black text-xl text-slate-800 tracking-tight uppercase">
-                        {isEditing ? "Edit Konsul Kehormatan" : "Tambah Konsul Kehormatan"}
-                    </h3>
-                    <button type="button" onClick={onClose} className="btn btn-sm btn-circle btn-ghost text-slate-400">x</button>
+            <form className="space-y-5" onSubmit={handleSubmit}>
+                {/* Negara (SearchableSelect dibiarkan — primitive khusus, bukan input teks biasa) */}
+                <Field label="Negara" required htmlFor="konsul-negara">
+                    <SearchableSelect
+                        id="konsul-negara"
+                        options={[
+                            { value: "", label: "-- Pilih Negara --" },
+                            ...NEGARA_LIST.map(n => ({ value: n, label: n }))
+                        ]}
+                        value={data.negara}
+                        onChange={(val) => onChange({ target: { name: 'negara', value: val } })}
+                        placeholder="-- Pilih Negara --"
+                        className="select select-bordered w-full bg-white text-slate-800 border-slate-200 focus:ring-4 focus:ring-sky-100 transition-all rounded-2xl text-sm font-semibold h-12 px-4"
+                    />
+                </Field>
+
+                {/* Kota */}
+                <Field label="Kota" required htmlFor="konsul-kota">
+                    <Input
+                        id="konsul-kota"
+                        type="text"
+                        name="kota"
+                        value={data.kota}
+                        onChange={onChange}
+                        required
+                        placeholder="Contoh: Napoli"
+                    />
+                </Field>
+
+                {/* Nama Resmi & Rangkapan */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <Input
+                        label="Nama Resmi"
+                        id="konsul-nama-resmi"
+                        type="text"
+                        name="nama_resmi"
+                        value={data.nama_resmi || ""}
+                        onChange={onChange}
+                        placeholder="Contoh: Konsulat Kehormatan RI..."
+                    />
+                    <Input
+                        label="Rangkapan"
+                        id="konsul-rangkapan"
+                        type="text"
+                        name="rangkapan"
+                        value={data.rangkapan || ""}
+                        onChange={onChange}
+                        placeholder="Wilayah rangkapan"
+                    />
                 </div>
 
-                {/* Body */}
-                <form className="space-y-5" onSubmit={handleSubmit}>
-                    {/* Negara */}
-                    <Field label="Negara" required>
-                        <SearchableSelect
-                            options={[
-                                { value: "", label: "-- Pilih Negara --" },
-                                ...NEGARA_LIST.map(n => ({ value: n, label: n }))
-                            ]}
-                            value={data.negara}
-                            onChange={(val) => onChange({ target: { name: 'negara', value: val } })}
-                            placeholder="-- Pilih Negara --"
-                            className="select select-bordered w-full bg-white text-slate-800 border-slate-200 focus:ring-4 focus:ring-sky-100 transition-all rounded-2xl text-sm font-semibold h-12 px-4"
-                        />
-                    </Field>
+                {/* Alamat */}
+                <Field label="Alamat" required htmlFor="konsul-alamat">
+                    <Textarea
+                        id="konsul-alamat"
+                        name="alamat"
+                        value={data.alamat}
+                        onChange={onChange}
+                        required
+                        rows={3}
+                        placeholder={"Contoh:\nVia Partenope, 14\n80121 Napoli"}
+                    />
+                </Field>
 
-                    {/* Kota */}
-                    <Field label="Kota" required>
-                        <input
-                            type="text"
-                            name="kota"
-                            value={data.kota}
-                            onChange={onChange}
-                            required
-                            placeholder="Contoh: Napoli"
-                            className={inputCls}
-                        />
-                    </Field>
+                {/* No. Telp & Fax */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <Input
+                        label="No. Telepon"
+                        id="konsul-no-telp"
+                        type="text"
+                        name="no_telp"
+                        value={data.no_telp}
+                        onChange={onChange}
+                        placeholder="+62 21 xxxxxxxx"
+                    />
+                    <Input
+                        label="Fax"
+                        id="konsul-fax"
+                        type="text"
+                        name="fax"
+                        value={data.fax}
+                        onChange={onChange}
+                        placeholder="+62 21 xxxxxxxx"
+                    />
+                </div>
 
-                    {/* Nama Resmi & Rangkapan */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <Field label="Nama Resmi">
-                            <input
-                                type="text"
-                                name="nama_resmi"
-                                value={data.nama_resmi || ""}
-                                onChange={onChange}
-                                placeholder="Contoh: Konsulat Kehormatan RI..."
-                                className={inputCls}
-                            />
-                        </Field>
-                        <Field label="Rangkapan">
-                            <input
-                                type="text"
-                                name="rangkapan"
-                                value={data.rangkapan || ""}
-                                onChange={onChange}
-                                placeholder="Wilayah rangkapan"
-                                className={inputCls}
-                            />
-                        </Field>
-                    </div>
+                {/* Email & Website */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <Input
+                        label="Email"
+                        id="konsul-email"
+                        type="email"
+                        name="email"
+                        value={data.email}
+                        onChange={onChange}
+                        placeholder="contoh@email.com"
+                    />
+                    <Input
+                        label="Website"
+                        id="konsul-website"
+                        type="text"
+                        name="website"
+                        value={data.website}
+                        onChange={onChange}
+                        placeholder="www.example.com"
+                    />
+                </div>
 
-                    {/* Alamat */}
-                    <Field label="Alamat" required>
-                        <textarea
-                            name="alamat"
-                            value={data.alamat}
-                            onChange={onChange}
-                            required
-                            rows={3}
-                            placeholder={"Contoh:\nVia Partenope, 14\n80121 Napoli"}
-                            className={textareaCls}
-                        />
-                    </Field>
+                {/* Hari Kerja */}
+                <Input
+                    label="Hari Kerja"
+                    id="konsul-hari-kerja"
+                    type="text"
+                    name="hari_kerja"
+                    value={data.hari_kerja}
+                    onChange={onChange}
+                    placeholder="Contoh: Senin – Jumat, 09.00 – 17.00"
+                />
 
-                    {/* No. Telp & Fax */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <Field label="No. Telepon">
-                            <input
-                                type="text"
-                                name="no_telp"
-                                value={data.no_telp}
-                                onChange={onChange}
-                                placeholder="+62 21 xxxxxxxx"
-                                className={inputCls}
-                            />
-                        </Field>
-                        <Field label="Fax">
-                            <input
-                                type="text"
-                                name="fax"
-                                value={data.fax}
-                                onChange={onChange}
-                                placeholder="+62 21 xxxxxxxx"
-                                className={inputCls}
-                            />
-                        </Field>
-                    </div>
-
-                    {/* Email & Website */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <Field label="Email">
-                            <input
-                                type="email"
-                                name="email"
-                                value={data.email}
-                                onChange={onChange}
-                                placeholder="contoh@email.com"
-                                className={inputCls}
-                            />
-                        </Field>
-                        <Field label="Website">
-                            <input
-                                type="text"
-                                name="website"
-                                value={data.website}
-                                onChange={onChange}
-                                placeholder="www.example.com"
-                                className={inputCls}
-                            />
-                        </Field>
-                    </div>
-
-                    {/* Hari Kerja */}
-                    <Field label="Hari Kerja">
-                        <input
-                            type="text"
-                            name="hari_kerja"
-                            value={data.hari_kerja}
-                            onChange={onChange}
-                            placeholder="Contoh: Senin – Jumat, 09.00 – 17.00"
-                            className={inputCls}
-                        />
-                    </Field>
-
-                    {/* Footer */}
-                    <div className="modal-action flex gap-3 pt-4 border-t border-slate-100">
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="btn btn-ghost text-slate-400 font-bold uppercase text-[10px]"
-                        >
-                            Batal
-                        </button>
-                        <button
-                            type="submit"
-                            disabled={isSaving}
-                            className="btn bg-sky-600 hover:bg-sky-700 border-none text-white px-10 rounded-2xl font-bold text-xs uppercase"
-                        >
-                            {isSaving ? "Menyimpan..." : isEditing ? "Update" : "Tambah"}
-                        </button>
-                    </div>
-                </form>
-            </div>
-            <form method="dialog" className="modal-backdrop">
-                <button type="button" onClick={onClose}>close</button>
+                {/* Footer */}
+                <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                    <Button variant="ghost" type="button" onClick={onClose} className="uppercase text-[10px]">
+                        Batal
+                    </Button>
+                    <Button variant="primary" type="submit" disabled={isSaving} className="uppercase text-xs px-10">
+                        {isSaving ? "Menyimpan..." : isEditing ? "Update" : "Tambah"}
+                    </Button>
+                </div>
             </form>
-        </dialog>
+        </Modal>
     );
 }
 
@@ -663,7 +621,7 @@ export default function KonsulKehormatan() {
     // ─── RENDER ───────────────────────────────────────────────────────────────
     return (
         <div className="space-y-6 min-h-screen">
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 w-full text-slate-700 p-6 animate-in fade-in duration-500">
+            <Card className="p-6 animate-in fade-in duration-500">
                 {/* Header dengan Pencarian */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                     <div>
@@ -675,44 +633,37 @@ export default function KonsulKehormatan() {
 
                     <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
                         {/* Kotak Pencarian */}
-                        <div className="relative w-full sm:w-64">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                            <input
+                        <div className="w-full sm:w-64">
+                            <Input
                                 type="text"
                                 placeholder="Cari negara / kota..."
                                 aria-label="Cari negara atau kota"
                                 value={searchKonsul}
                                 onChange={(e) => { setSearchKonsul(e.target.value); setPageKonsul(1); }}
-                                className="pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 w-full bg-slate-50"
+                                icon={
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                }
+                                className="h-9"
                             />
                         </div>
 
-                        <div className="join border-none shadow-sm rounded-xl overflow-hidden">
-                            <button
-                                onClick={() => downloadPDF('preview')}
-                                className="join-item p-2 px-4 text-rose-600 bg-rose-50 hover:bg-rose-100 transition-colors border border-rose-200 hover:border-rose-300 flex items-center justify-center gap-2 group whitespace-nowrap"
-                            >
+                        <div className="flex overflow-hidden rounded-xl shadow-sm">
+                            <Button variant="softDanger" onClick={() => downloadPDF('preview')} className="rounded-none h-9">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="size-4">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                                 </svg>
                                 <span className="text-xs font-bold uppercase tracking-tight">Preview</span>
-                            </button>
-                            <button
-                                onClick={() => downloadPDF('download')}
-                                className="join-item p-2 px-4 bg-rose-500 hover:bg-rose-600 text-white transition-colors border-none flex items-center justify-center gap-2 group whitespace-nowrap"
-                            >
+                            </Button>
+                            <Button variant="danger" onClick={() => downloadPDF('download')} className="rounded-none h-9">
                                 <span className="text-xs font-bold uppercase tracking-tight">Unduh PDF</span>
-                            </button>
+                            </Button>
                         </div>
 
-                        <button
-                            onClick={openAddKonsul}
-                            className="px-4 py-2 bg-sky-500 text-white rounded-xl hover:bg-sky-600 transition-colors font-medium text-sm whitespace-nowrap"
-                        >
+                        <Button variant="primary" onClick={openAddKonsul} className="h-9 whitespace-nowrap">
                             + Tambah Konsul
-                        </button>
+                        </Button>
                     </div>
                 </div>
 
@@ -787,26 +738,30 @@ export default function KonsulKehormatan() {
                                                 <p className="font-bold text-slate-400 uppercase mb-2 text-xs text-center">Aksi</p>
                                                 <div className="flex gap-1.5">
                                                     {canEditKonsul(k) && (
-                                                    <button
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
                                                         onClick={(e) => { e.preventDefault(); openEditKonsul(k); }}
-                                                        className="btn btn-sm btn-square btn-ghost text-amber-500 hover:bg-amber-100"
+                                                        className="px-2 text-amber-500 hover:bg-amber-100"
                                                         title="Edit Konsul Kehormatan"
                                                     >
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4">
                                                             <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125" />
                                                         </svg>
-                                                    </button>
+                                                    </Button>
                                                     )}
                                                     {canEditKonsul(k) && (
-                                                    <button
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
                                                         onClick={(e) => { e.preventDefault(); handleDeleteKonsul(k.id); }}
-                                                        className="btn btn-sm btn-square btn-ghost text-red-400 hover:bg-red-100"
+                                                        className="px-2 text-red-400 hover:bg-red-100"
                                                         title="Hapus Konsul Kehormatan"
                                                     >
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4">
                                                             <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                                                         </svg>
-                                                    </button>
+                                                    </Button>
                                                     )}
                                                 </div>
                                             </div>
@@ -851,7 +806,7 @@ export default function KonsulKehormatan() {
                         />
                     </div>
                 )}
-            </div>
+            </Card>
 
             {/* ── Modal ── */}
             <KonsulModal

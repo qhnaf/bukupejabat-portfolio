@@ -36,6 +36,9 @@ export default function Input({
                 "focus-within:border-sky-500 focus-within:ring-2 focus-within:ring-sky-100 transition-all",
                 props.disabled && "bg-slate-50 cursor-not-allowed",
                 SIZE_CLASSES[size] || SIZE_CLASSES.md,
+                // className diteruskan ke pembungkus, bukan <input>, agar
+                // override ukuran (mis. h-9) benar-benar mengubah tinggi kotak.
+                className,
             )}
         >
             {icon && (
@@ -58,7 +61,6 @@ export default function Input({
                     // Padding kiri input mengikuti keberadaan icon.
                     !icon && "pl-0",
                     "py-0", // tinggi sudah diatur container lewat size
-                    className,
                 )}
                 {...props}
             />
