@@ -6,6 +6,8 @@ import ConfirmModal from "../components/ConfirmModal";
 import Pagination from "../components/Pagination";
 import { logActivity } from "../utils/logActivity";
 import SearchableSelect from "../components/SearchableSelect";
+import Input from "../components/ui/Input";
+import Button from "../components/ui/Button";
 
 export default function DataAdmin() {
     // 1. Ganti sampleAdmins dengan array kosong dulu
@@ -225,38 +227,41 @@ export default function DataAdmin() {
                     </div>
 
                     <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-                        <div className="relative w-full sm:w-64">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                                />
-                            </svg>
-                            <input
+                        <div className="w-full sm:w-64">
+                            <Input
                                 type="search"
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
                                 aria-label="Cari admin"
                                 placeholder="Cari admin..."
-                                className="pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 w-full bg-slate-50 text-slate-700"
+                                size="sm"
+                                className="h-9"
+                                icon={
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="h-4 w-4"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                        />
+                                    </svg>
+                                }
                             />
                         </div>
 
-                        <button
+                        <Button
                             type="button"
                             onClick={openAdd}
-                            className="px-4 py-2 text-white bg-sky-500 hover:bg-sky-600 rounded-xl transition-colors text-sm font-semibold whitespace-nowrap"
+                            className="whitespace-nowrap"
                         >
                             Tambah Admin
-                        </button>
+                        </Button>
                     </div>
                 </div>
 
@@ -315,27 +320,31 @@ export default function DataAdmin() {
                                         </td>
                                         <td className="px-4 py-4 text-center sticky right-0 bg-white shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.05)]">
                                             {/* edit */}
-                                            <button
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
                                                 onClick={() => {
                                                     openEdit(a)
                                                 }}
-                                                className="btn btn-sm btn-square btn-ghost text-amber-500 hover:bg-amber-100"
+                                                className="px-2 text-amber-500 hover:bg-amber-100"
                                             >
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
                                                     <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125" />
                                                 </svg>
-                                            </button>
+                                            </Button>
                                             {/* delete */}
-                                            <button
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
                                                 onClick={() => {
                                                     openDelete(a)
                                                 }}
-                                                className="btn btn-sm btn-square btn-ghost text-rose-500 hover:bg-rose-100"
+                                                className="px-2 text-rose-500 hover:bg-rose-100"
                                             >
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
                                                     <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                                                 </svg>
-                                            </button>
+                                            </Button>
                                         </td>
                                     </tr>
                                 ))
@@ -447,36 +456,39 @@ function AdminForm({ initialData = {}, onSave, onCancel, submitLabel = "Simpan",
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
-                    <input
+                    <label htmlFor="admin-email" className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                    <Input
+                        id="admin-email"
+                        size="sm"
                         value={form.email || ""}
                         onChange={(e) =>
                             setForm({ ...form, email: e.target.value })
                         }
-                        className="w-full border border-slate-300 px-3 py-2 rounded-xl text-sm text-slate-700 bg-white focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Username</label>
-                    <input
+                    <label htmlFor="admin-username" className="block text-sm font-medium text-slate-700 mb-1">Username</label>
+                    <Input
+                        id="admin-username"
+                        size="sm"
                         value={form.username || ""}
                         onChange={(e) =>
                             setForm({ ...form, username: e.target.value })
                         }
-                        className="w-full border border-slate-300 px-3 py-2 rounded-xl text-sm text-slate-700 bg-white focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
                     />
                 </div>
                 {!isEdit && (
                     <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">Password</label>
-                        <input
+                        <label htmlFor="admin-password" className="block text-sm font-medium text-slate-700 mb-1">Password</label>
+                        <Input
+                            id="admin-password"
                             type="password"
+                            size="sm"
                             value={form.password || ""}
                             onChange={(e) =>
                                 setForm({ ...form, password: e.target.value })
                             }
                             placeholder="Minimal 6 karakter"
-                            className="w-full border border-slate-300 px-3 py-2 rounded-xl text-sm text-slate-700 bg-white focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
                         />
                     </div>
                 )}
@@ -496,16 +508,17 @@ function AdminForm({ initialData = {}, onSave, onCancel, submitLabel = "Simpan",
             </div>
 
             <div className="mt-6 flex justify-end gap-3 border-t border-slate-100 pt-4">
-                <button
+                <Button
                     type="button"
+                    variant="ghost"
+                    size="sm"
                     onClick={onCancel}
-                    className="btn btn-sm btn-ghost text-slate-500 hover:bg-slate-100"
                 >
                     Batal
-                </button>
-                <button type="submit" className="btn btn-sm bg-sky-500 hover:bg-sky-600 text-white border-none">
+                </Button>
+                <Button type="submit" size="sm">
                     {submitLabel}
-                </button>
+                </Button>
             </div>
         </form>
     );
