@@ -18,11 +18,15 @@ class UnitKerjaController extends Controller
         // Ambil data Unit Kerja + Hitung Jumlah Pegawai otomatis
         $query = UnitKerja::withCount('pegawai');
 
-        // Fitur Pencarian (jika nanti butuh search)
+        // Fitur Pencarian (case-insensitive).
+        // Pakai LOWER() di kedua sisi supaya portabel: perilakunya sama di
+        // MySQL maupun Postgres (LIKE MySQL case-insensitive, Postgres tidak).
         if ($request->has('search')) {
-            $search = $request->search;
-            $query->where('nama_unit_kerja', 'like', "%{$search}%")
-                ->orWhere('kode_unit_kerja', 'like', "%{$search}%");
+            $search = mb_strtolower($request->search);
+            $query->where(function ($q) use ($search) {
+                $q->whereRaw('LOWER(nama_unit_kerja) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(kode_unit_kerja) LIKE ?', ["%{$search}%"]);
+            });
         }
 
         $units = $query->get();

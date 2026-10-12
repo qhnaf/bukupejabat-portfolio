@@ -1,0 +1,65 @@
+# Render Blueprint — Buku Pejabat V2 (portfolio)
+# Deploy: hubungkan repo ini ke Render → "New +" → Blueprint → pilih repo ini.
+# Render akan membaca file ini dan membuat Web Service + Postgres otomatis.
+
+services:
+  - type: web
+    name: buku-pejabat
+    runtime: php
+    # Build: install dependensi PHP + JS, build aset Vite.
+    # Migrasi dijalankan di startCommand (idempoten, aman tiap deploy).
+    buildCommand: >
+      composer install --no-dev --optimize-autoloader &&
+      npm ci &&
+      npm run build
+    # Start: migrate (buat skema) lalu jalankan server Laravel.
+    startCommand: php artisan migrate --force && php artisan serve --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      # APP_KEY digenerate otomatis oleh Render (nilainya disimpan di dashboard).
+      - key: APP_KEY
+        generateValue: true
+      # SESUAIKAN dengan URL yang diberikan Render (mis. https://buku-pejabat-xxxx.onrender.com)
+      - key: APP_URL
+        value: https://buku-pejabat.onrender.com
+      - key: LOG_CHANNEL
+        value: stderr
+      # Driver database-based — aman untuk disk ephemeral Render.
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database
+      # Koneksi ke Postgres yang dibuat di bawah (diisi otomatis Render).
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: buku-pejabat-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: buku-pejabat-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: buku-pejabat-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: buku-pejabat-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: buku-pejabat-db
+          property: password
+
+databases:
+  - name: buku-pejabat-db
+    databaseName: buku_pejabat_portfolio
+    user: buku_pejabat
+    plan: free
