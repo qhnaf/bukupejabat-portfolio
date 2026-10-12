@@ -2,6 +2,7 @@ import React, { useState, lazy, Suspense } from "react";
 import api, { endpoints } from "../api/client";
 import { loadPdfLibs } from "../utils/pdfLibs";
 import Swal from "sweetalert2";
+import Button from "../components/ui/Button";
 import kemluBg from "../assets/images/logo-kemlu-flipbook.png";
 import watermarkImg from "../assets/images/logo_kemlu_fix.png";
 // FlipbookViewer memuat react-pdf (berat) — dimuat hanya saat flipbook dibuka.
@@ -406,19 +407,19 @@ export default function PublicPage() {
                                 <span className="font-black text-slate-800 uppercase tracking-widest text-sm block">Dalam Negeri</span>
                             </div>
                             <div className="flex flex-col gap-2 w-full mt-2">
-                                <button onClick={() => prepareFlipbook('dalam')} className="w-full py-3 bg-sky-400 text-white hover:bg-sky-500 rounded-xl text-xs font-bold uppercase tracking-wide transition-all duration-300 shadow-lg shadow-sky-200 flex items-center justify-center gap-2 group/btn border border-sky-400 hover:border-sky-500">
+                                <Button onClick={() => prepareFlipbook('dalam')} className="w-full py-3 text-xs font-bold uppercase tracking-wide shadow-lg shadow-sky-200 border border-sky-400 hover:border-sky-500 group/btn">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 group-hover/btn:rotate-12 transition-transform">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
                                     </svg>
                                     Buka Flipbook
-                                </button>
+                                </Button>
                                 <div className="flex gap-2 w-full">
-                                    <button onClick={() => downloadPdf('dalam', 'preview')} className="flex-1 py-2 bg-emerald-50 text-emerald-600 hover:bg-emerald-100 rounded-xl text-[10px] font-bold uppercase tracking-wide transition-colors border border-emerald-100">
+                                    <Button variant="softSuccess" onClick={() => downloadPdf('dalam', 'preview')} className="flex-1 py-2 text-[10px] font-bold uppercase tracking-wide border border-emerald-100">
                                         Preview PDF
-                                    </button>
-                                    <button onClick={() => downloadPdf('dalam', 'download')} className="flex-1 py-2 bg-emerald-500 text-white hover:bg-emerald-600 rounded-xl text-[10px] font-bold uppercase tracking-wide transition-colors shadow-sm shadow-emerald-200">
+                                    </Button>
+                                    <Button variant="success" onClick={() => downloadPdf('dalam', 'download')} className="flex-1 py-2 text-[10px] font-bold uppercase tracking-wide shadow-sm shadow-emerald-200">
                                         Unduh PDF
-                                    </button>
+                                    </Button>
                                 </div>
                             </div>
                         </div>
@@ -433,19 +434,19 @@ export default function PublicPage() {
                                 <span className="font-black text-slate-800 uppercase tracking-widest text-sm block">Luar Negeri</span>
                             </div>
                             <div className="flex flex-col gap-2 w-full mt-2">
-                                <button onClick={() => prepareFlipbook('luar')} className="w-full py-3 bg-sky-400 text-white hover:bg-sky-500 rounded-xl text-xs font-bold uppercase tracking-wide transition-all duration-300 shadow-lg shadow-sky-200 flex items-center justify-center gap-2 group/btn border border-sky-400 hover:border-sky-500">
+                                <Button onClick={() => prepareFlipbook('luar')} className="w-full py-3 text-xs font-bold uppercase tracking-wide shadow-lg shadow-sky-200 border border-sky-400 hover:border-sky-500 group/btn">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 group-hover/btn:rotate-12 transition-transform">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
                                     </svg>
                                     Buka Flipbook
-                                </button>
+                                </Button>
                                 <div className="flex gap-2 w-full">
-                                    <button onClick={() => downloadPdf('luar', 'preview')} className="flex-1 py-2 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-xl text-[10px] font-bold uppercase tracking-wide transition-colors border border-rose-100">
+                                    <Button variant="softDanger" onClick={() => downloadPdf('luar', 'preview')} className="flex-1 py-2 text-[10px] font-bold uppercase tracking-wide border border-rose-100">
                                         Preview PDF
-                                    </button>
-                                    <button onClick={() => downloadPdf('luar', 'download')} className="flex-1 py-2 bg-rose-500 text-white hover:bg-rose-600 rounded-xl text-[10px] font-bold uppercase tracking-wide transition-colors shadow-sm shadow-rose-200">
+                                    </Button>
+                                    <Button variant="danger" onClick={() => downloadPdf('luar', 'download')} className="flex-1 py-2 text-[10px] font-bold uppercase tracking-wide shadow-sm shadow-rose-200">
                                         Unduh PDF
-                                    </button>
+                                    </Button>
                                 </div>
                             </div>
                         </div>
