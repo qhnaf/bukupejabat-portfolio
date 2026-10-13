@@ -42,9 +42,17 @@ A full-stack web application for managing employee directories and publishing of
 |:-:|:-:|
 | ![Public Portal](docs/screenshots/01-public-portal.png) | ![Login](docs/screenshots/02-login.png) |
 
-| Admin Dashboard | Directory View |
+| Admin Dashboard | Dalam Negeri |
 |:-:|:-:|
 | ![Dashboard](docs/screenshots/03-dashboard.png) | ![Dalam Negeri](docs/screenshots/04-dalam-negeri.png) |
+
+| Data Pejabat | Unit Kerja |
+|:-:|:-:|
+| ![Data Pejabat](docs/screenshots/05-data-pejabat.png) | ![Unit Kerja](docs/screenshots/06-unit-kerja.png) |
+
+| Konsul Kehormatan | Sync Data |
+|:-:|:-:|
+| ![Konsul](docs/screenshots/07-konsul-kehor.png) | ![Sync Data](docs/screenshots/08-sync-data.png) |
 
 ---
 
