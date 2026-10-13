@@ -54,10 +54,26 @@ A full-stack web application for managing employee directories and publishing of
 |-------|-----------|
 | Backend | Laravel 12 · PHP 8.2+ · Laravel Sanctum |
 | Frontend | React 19 · React Router 6 · Vite 7 |
-| Styling | Tailwind CSS 4 · DaisyUI |
+| Styling | Tailwind CSS 4 |
+| Testing | Pest 4 · PHPUnit 12 |
 | Charts | Recharts |
 | PDF / Documents | jsPDF · jspdf-autotable · react-pageflip · SheetJS (xlsx) |
 | Database | MySQL 8 |
+
+---
+
+## 🎨 Design System
+
+Custom UI primitives built on Tailwind CSS — consistent, accessible, and lightweight:
+
+| Primitive | Description |
+|-----------|-------------|
+| `Button` | Variants: `primary`, `success`, `danger`, `softSuccess`, `softDanger`, `ghost` |
+| `Input` / `Textarea` / `Select` | Form fields with label, error state, and consistent styling |
+| `Dropdown` | Custom select with animation, check icon, and smart open direction |
+| `SearchableSelect` | Combobox with search filter for long lists |
+| `Pagination` | Page navigation with configurable items-per-page |
+| `Card` / `ConfirmModal` | Layout and confirmation dialog components |
 
 ---
 
@@ -113,8 +129,12 @@ The app will be available at `http://localhost:8000`.
 ├── database/migrations/        # Schema migrations
 ├── resources/js/src/
 │   ├── pages/                  # PagePublic, Dashboard, Directory, Login, ...
-│   ├── components/             # Reusable UI (FlipbookViewer, charts, ...)
+│   ├── components/
+│   │   ├── ui/                 # Design system primitives (Button, Input, Dropdown, ...)
+│   │   └── ...                 # FlipbookViewer, charts, etc.
 │   └── data/                   # Sample anonymized dataset (JSON)
+├── tests/
+│   └── Feature/                # 69 Pest feature tests
 └── routes/api.php              # Public + Sanctum-protected routes
 ```
 
@@ -126,11 +146,32 @@ This repository ships with a **fully anonymized dataset** (3,733 employee record
 
 ---
 
+## 🧪 Testing
+
+69 feature tests covering the full API surface, built with Pest 4:
+
+```bash
+php artisan test
+```
+
+| Test Suite | Coverage |
+|-----------|----------|
+| Auth | Login, logout, CAPTCHA, session handling |
+| Pegawai | CRUD, search, filter dalam/luar negeri |
+| Unit Kerja | CRUD, filtering, public endpoints |
+| User Management | Role hierarchy, account CRUD |
+| Sync Data | Config CRUD, external API sync (mocked) |
+| Activity / Sync Logs | Audit trail, CSV export |
+| Public Activity | Download & flipbook hit tracking |
+
+---
+
 ## 📌 Notes
 
 - The external data-sync feature (Settings → Sync Data) expects an internal API endpoint and is disabled by default.
 - PDF generation runs 100% client-side — the server never renders PDFs.
 - This is a portfolio edition of an internal project; infrastructure-specific integrations have been removed.
+- Performance optimizations: route-level code splitting, lazy-loaded heavy libraries (jsPDF, xlsx, SweetAlert2, react-pageflip), compressed image assets.
 
 ---
 
