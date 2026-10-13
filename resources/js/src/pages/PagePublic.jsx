@@ -1,12 +1,17 @@
 import React, { useState, lazy, Suspense } from "react";
 import api, { endpoints } from "../api/client";
 import { loadPdfLibs } from "../utils/pdfLibs";
-import Swal from "sweetalert2";
 import Button from "../components/ui/Button";
 import kemluBg from "../assets/images/logo-kemlu-flipbook.png";
 import watermarkImg from "../assets/images/logo_kemlu_fix.png";
 // FlipbookViewer memuat react-pdf (berat) — dimuat hanya saat flipbook dibuka.
 const FlipbookViewer = lazy(() => import("../components/FlipbookViewer"));
+// SweetAlert2 (135 KiB) dimuat hanya saat user klik tombol, bukan di initial page load.
+let _swalPromise = null;
+const loadSwal = () => {
+    if (!_swalPromise) _swalPromise = import("sweetalert2").then((m) => m.default);
+    return _swalPromise;
+};
 
 const BASE_INFO_ROWS = [
     { label: "Alamat", field: "alamat" },
@@ -68,6 +73,7 @@ export default function PublicPage() {
     };
 
     const downloadPdf = async (type, action = 'preview') => {
+        const Swal = await loadSwal();
         const cfg = PDF_CONFIG[type];
         trackHit(action);
 
@@ -264,6 +270,7 @@ export default function PublicPage() {
     };
 
     const prepareFlipbook = async (type) => {
+        const Swal = await loadSwal();
         trackHit('preview');
         Swal.fire({
             title: 'Menyiapkan Flipbook...',
@@ -386,7 +393,7 @@ export default function PublicPage() {
                 <div className="max-w-4xl w-full bg-white rounded-[32px] shadow-2xl shadow-slate-200/60 p-10 border border-slate-100 text-center transition-all">
                     <div className="mb-12">
                         <div className="inline-block mb-6">
-                            <img src={kemluBg} alt="Logo Kemlu" className="h-24 object-contain" />
+                            <img src={kemluBg} alt="Logo Kemlu" width={96} height={96} className="h-24 w-24 object-contain" />
                         </div>
                         <h1 className="text-3xl font-black text-slate-800 tracking-tight uppercase mb-2">Portal Unduhan Dokumen Pejabat</h1>
                         <p className="text-xs text-slate-400 font-semibold tracking-widest uppercase mt-1">
