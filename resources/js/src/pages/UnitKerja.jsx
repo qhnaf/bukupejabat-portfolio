@@ -6,6 +6,7 @@ import Modal from "../components/Modal";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 import Textarea from "../components/ui/Textarea";
+import Dropdown from "../components/ui/Dropdown";
 
 export default function UnitKerja() {
     const [units, setUnits] = useState([]);
@@ -196,16 +197,17 @@ export default function UnitKerja() {
                     <div className="flex items-center gap-3">
                         {/* Dropdown Filter Jenis Unit Kerja */}
                         <div className="relative w-full sm:w-40">
-                            <select
-                                value={filterType} // Bind state ke select value
-                                onChange={(e) => setFilterType(e.target.value)} // Update state saat dipilih
-                                className="select select-sm w-full py-2 px-4 bg-white text-slate-700 border border-slate-200 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none rounded-xl"
-                                style={{ height: '36px' }}
-                            >
-                                <option value="all">Semua</option>
-                                <option value="dalam_negeri">Dalam Negeri</option>
-                                <option value="luar_negeri">Luar Negeri</option>
-                            </select>
+                            <Dropdown
+                                size="sm"
+                                value={filterType}
+                                onChange={setFilterType}
+                                className="w-full sm:w-40"
+                                options={[
+                                    { value: "all", label: "Semua" },
+                                    { value: "dalam_negeri", label: "Dalam Negeri" },
+                                    { value: "luar_negeri", label: "Luar Negeri" },
+                                ]}
+                            />
                         </div>
                     </div>
                 </div>

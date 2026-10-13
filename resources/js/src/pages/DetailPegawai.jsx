@@ -8,6 +8,7 @@ import Modal from "../components/Modal";
 import Input from "../components/ui/Input";
 import Textarea from "../components/ui/Textarea";
 import Button from "../components/ui/Button";
+import Select from "../components/ui/Select";
 import Card from "../components/ui/Card";
 
 // Import gambar background kemlu
@@ -619,14 +620,14 @@ export default function DetailPegawai() {
                         />
 
                         <div className="form-control">
-                            <label className="text-[11px] font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest">Bobot (Prioritas Urutan)</label>
-                            <select name="bobot" defaultValue={selectedUnit?.bobot || ""} className="select select-bordered w-full bg-white text-slate-800 border-slate-200 focus:ring-4 focus:ring-sky-100 transition-all rounded-2xl text-sm font-semibold h-12">
+                            <label htmlFor="edit-bobot" className="text-[11px] font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest">Bobot (Prioritas Urutan)</label>
+                            <Select id="edit-bobot" name="bobot" defaultValue={selectedUnit?.bobot || ""} size="lg">
                                 <option value="">Tanpa Bobot Khusus</option>
                                 <option value="I">Bobot I (Paling Atas)</option>
                                 <option value="II">Bobot II</option>
                                 <option value="III">Bobot III</option>
                                 <option value="IV">Bobot IV</option>
-                            </select>
+                            </Select>
                             <button type="button" onClick={() => setIsNotesModalOpen(true)} className="text-blue-500 hover:text-blue-700 text-[10px] italic mt-2 font-bold cursor-pointer text-left ml-2">📖 Info: Bobot akan mengatasi urutan Kode Jabatan</button>
                         </div>
 

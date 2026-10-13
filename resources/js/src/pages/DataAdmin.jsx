@@ -8,6 +8,7 @@ import { logActivity } from "../utils/logActivity";
 import SearchableSelect from "../components/SearchableSelect";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
+import Select from "../components/ui/Select";
 
 export default function DataAdmin() {
     // 1. Ganti sampleAdmins dengan array kosong dulu
@@ -493,17 +494,18 @@ function AdminForm({ initialData = {}, onSave, onCancel, submitLabel = "Simpan",
                     </div>
                 )}
                 <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Role</label>
-                    <select
+                    <label htmlFor="admin-role" className="block text-sm font-medium text-slate-700 mb-1">Role</label>
+                    <Select
+                        id="admin-role"
+                        size="sm"
                         value={form.role || "admin"}
                         onChange={(e) =>
                             setForm({ ...form, role: e.target.value })
                         }
-                        className="w-full border border-slate-300 px-3 py-2 rounded-xl text-sm text-slate-700 bg-white focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
                     >
                         <option value="superadmin">Super Admin</option>
                         <option value="admin">Admin</option>
-                    </select>
+                    </Select>
                 </div>
             </div>
 

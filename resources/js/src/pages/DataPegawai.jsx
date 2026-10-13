@@ -4,6 +4,7 @@ import Modal from "../components/Modal";
 import ConfirmModal from "../components/ConfirmModal";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
+import Pagination from "../components/Pagination";
 
 export default function DataPegawai() {
     // 1. State Utama
@@ -169,35 +170,6 @@ export default function DataPegawai() {
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = sortedData.slice(indexOfFirstItem, indexOfLastItem);
-
-    const handleNext = () => {
-        if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-    };
-
-    const handlePrev = () => {
-        if (currentPage > 1) setCurrentPage(currentPage - 1);
-    };
-
-    const getPageNumbers = () => {
-        const pages = [];
-        const maxVisible = 5;
-
-        if (totalPages <= maxVisible) {
-            for (let i = 1; i <= totalPages; i++) pages.push(i);
-        } else {
-            pages.push(1);
-            if (currentPage > 3) pages.push("...");
-
-            let start = Math.max(2, currentPage - 1);
-            let end = Math.min(totalPages - 1, currentPage + 1);
-
-            for (let i = start; i <= end; i++) pages.push(i);
-
-            if (currentPage < totalPages - 2) pages.push("...");
-            pages.push(totalPages);
-        }
-        return pages;
-    };
 
     if (loading) {
         return (
@@ -468,76 +440,17 @@ export default function DataPegawai() {
             </div>
 
             {/* Pagination Footer */}
-            <div className="px-6 py-4 border-t border-slate-200">
-                <div className="flex items-center justify-between mb-4 flex-wrap gap-4">
-                    <div className="flex items-center gap-3">
-                        <span className="text-sm text-slate-600 font-medium">
-                            Tampilkan
-                        </span>
-                        <select
-                            value={itemsPerPage}
-                            onChange={(e) => {
-                                setItemsPerPage(Number(e.target.value));
-                                setCurrentPage(1);
-                            }}
-                            className="select select-bordered select-sm bg-white border rounded-xl border-slate-300 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        >
-                            <option value={5}>5</option>
-                            <option value={10}>10</option>
-                            <option value={25}>25</option>
-                            <option value={50}>50</option>
-                            <option value={100}>100</option>
-                        </select>
-                        <span className="text-sm text-slate-600 font-medium">
-                            per halaman
-                        </span>
-                    </div>
-
-                    <div className="flex flex-col items-end gap-1">
-                        <span className="text-sm text-slate-600 font-medium">
-                            Menampilkan {indexOfFirstItem + 1}–
-                            {Math.min(indexOfLastItem, sortedData.length)} dari{" "}
-                            {sortedData.length} pegawai
-                        </span>
-                        <span className="text-xs text-slate-500">
-                            Halaman {currentPage} dari {totalPages}
-                        </span>
-                    </div>
-                </div>
-
-                <div className="flex items-center justify-center gap-1 flex-wrap">
-                    <button onClick={handlePrev} disabled={currentPage === 1}
-                        className="px-3 py-2 border border-slate-300 rounded-lg text-slate-600 hover:bg-slate-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
-                    >
-                        ← Sebelumnya
-                    </button>
-
-                    {getPageNumbers().map((page, idx) => (
-                        <button
-                            key={idx}
-                            onClick={() =>
-                                typeof page === "number" && setCurrentPage(page)
-                            }
-                            disabled={page === "..."}
-                            className={`px-3 py-2 rounded-lg text-sm transition-colors ${
-                                page === currentPage
-                                    ? "bg-blue-600 text-white"
-                                    : page === "..."
-                                      ? "text-slate-400 cursor-default"
-                                      : "border border-slate-300 text-slate-600 hover:bg-slate-300"
-                            }`}
-                        >
-                            {page}
-                        </button>
-                    ))}
-
-                    <button onClick={handleNext} disabled={currentPage === totalPages}
-                        className="px-3 py-2 border border-slate-300 rounded-lg text-slate-600 hover:bg-slate-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
-                    >
-                        Selanjutnya →
-                    </button>
-                </div>
-            </div>
+            <Pagination
+                currentPage={currentPage}
+                totalItems={sortedData.length}
+                itemsPerPage={itemsPerPage}
+                onPageChange={setCurrentPage}
+                onItemsPerPageChange={(value) => {
+                    setItemsPerPage(value);
+                    setCurrentPage(1);
+                }}
+                itemsPerPageOptions={[5, 10, 25, 50, 100]}
+            />
 
             {/* Modal Components */}
             <Modal

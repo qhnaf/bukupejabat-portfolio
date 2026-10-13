@@ -1,4 +1,5 @@
 import React from "react";
+import Dropdown from "./ui/Dropdown";
 
 export default function Pagination({
     currentPage,
@@ -39,17 +40,16 @@ export default function Pagination({
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center text-sm text-slate-500">
                     <span>Tampilkan</span>
-                    <select
+                    <Dropdown
+                        size="sm"
                         value={itemsPerPage}
-                        onChange={(e) => onItemsPerPageChange(Number(e.target.value))}
-                        className="rounded-xl border border-slate-300 bg-slate-50 px-3 py-2 text-slate-700 text-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-100"
-                    >
-                        {itemsPerPageOptions.map((value) => (
-                            <option key={value} value={value}>
-                                {value}
-                            </option>
-                        ))}
-                    </select>
+                        onChange={(value) => onItemsPerPageChange(value)}
+                        className="w-auto"
+                        options={itemsPerPageOptions.map((value) => ({
+                            value,
+                            label: String(value),
+                        }))}
+                    />
                     <span>per halaman</span>
                 </div>
 

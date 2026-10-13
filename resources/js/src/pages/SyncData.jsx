@@ -6,6 +6,7 @@ import Card from '../components/ui/Card';
 import Input from '../components/ui/Input';
 import Switch from '../components/ui/Switch';
 import ChoiceCard from '../components/ui/ChoiceCard';
+import Dropdown from '../components/ui/Dropdown';
 
 export default function SyncData() {
     const [isSyncing, setIsSyncing] = useState(false);
@@ -283,12 +284,13 @@ export default function SyncData() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     {/* URL Endpoint */}
                     <div className="md:col-span-2">
-                        <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+                        <label htmlFor="api-url" className="block text-sm font-semibold text-slate-700 mb-1.5">
                             URL Endpoint <span className="text-rose-400">*</span>
                         </label>
                         <div className="flex items-center gap-2 border border-slate-200 rounded-xl bg-slate-50 focus-within:border-indigo-400 focus-within:ring-2 focus-within:ring-indigo-100 transition-all overflow-hidden">
                             <span className="pl-4 text-slate-400 text-sm font-mono select-none shrink-0">https://</span>
                             <input
+                                id="api-url"
                                 type="text"
                                 placeholder="api.kemlu.go.id/v1/pegawai"
                                 value={apiUrl}
@@ -301,11 +303,12 @@ export default function SyncData() {
 
                     {/* API Key */}
                     <div>
-                        <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+                        <label htmlFor="api-key" className="block text-sm font-semibold text-slate-700 mb-1.5">
                             API Key / Token <span className="text-rose-400">*</span>
                         </label>
                         <div className="flex items-center border border-slate-200 rounded-xl bg-slate-50 focus-within:border-indigo-400 focus-within:ring-2 focus-within:ring-indigo-100 transition-all overflow-hidden">
                             <input
+                                id="api-key"
                                 type={showApiKey ? 'text' : 'password'}
                                 placeholder="Masukkan API Key atau Bearer Token..."
                                 value={apiKey}
@@ -318,10 +321,16 @@ export default function SyncData() {
                                 className="px-3 py-2.5 text-slate-400 hover:text-slate-600 transition-colors"
                                 title="Tampilkan / Sembunyikan"
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                </svg>
+                                {showApiKey ? (
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.774 3.162 10.066 7.498a10.524 10.524 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243" />
+                                    </svg>
+                                ) : (
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                    </svg>
+                                )}
                             </button>
                         </div>
                         <p className="text-xs text-slate-400 mt-1">Akan dikirim sebagai header <span className="font-mono bg-slate-100 px-1 rounded">Authorization: Bearer ...</span></p>
@@ -454,37 +463,44 @@ export default function SyncData() {
                     <div className={`space-y-5 transition-opacity ${isAutoSyncEnabled && !isBlocked ? 'opacity-100' : 'opacity-50 pointer-events-none'}`}>
                         <div>
                             <label className="block text-sm font-semibold text-slate-700 mb-2">Pola Sinkronisasi</label>
-                            <div className="flex gap-4">
-                                <label className="flex items-center gap-2 cursor-pointer">
-                                    <input type="radio" name="syncType" value="weekly" checked={autoSyncType === 'weekly'} onChange={(e) => setAutoSyncType(e.target.value)} className="w-4 h-4 text-sky-500 focus:ring-sky-500" />
-                                    <span className="text-sm text-slate-600">Per Minggu</span>
-                                </label>
-                                <label className="flex items-center gap-2 cursor-pointer">
-                                    <input type="radio" name="syncType" value="monthly" checked={autoSyncType === 'monthly'} onChange={(e) => setAutoSyncType(e.target.value)} className="w-4 h-4 text-sky-500 focus:ring-sky-500" />
-                                    <span className="text-sm text-slate-600">Per Bulan</span>
-                                </label>
-                            </div>
+                            <ChoiceCard
+                                name="syncType"
+                                value={autoSyncType}
+                                onChange={setAutoSyncType}
+                                options={[
+                                    { value: 'weekly', label: 'Per Minggu' },
+                                    { value: 'monthly', label: 'Per Bulan' },
+                                ]}
+                            />
                         </div>
 
                         {autoSyncType === 'weekly' && (
                             <div>
                                 <label className="block text-sm font-semibold text-slate-700 mb-2">Hari Eksekusi</label>
-                                <select value={syncDay} onChange={(e) => setSyncDay(e.target.value)} className="w-full text-sm py-2 px-3 border border-slate-200 rounded-lg focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 bg-slate-50">
-                                    {['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'].map(day => (
-                                        <option key={day} value={day}>Setiap Hari {day}</option>
-                                    ))}
-                                </select>
+                                <Dropdown
+                                    size="md"
+                                    value={syncDay}
+                                    onChange={setSyncDay}
+                                    options={['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'].map(day => ({
+                                        value: day,
+                                        label: `Setiap Hari ${day}`,
+                                    }))}
+                                />
                             </div>
                         )}
 
                         {autoSyncType === 'monthly' && (
                             <div>
                                 <label className="block text-sm font-semibold text-slate-700 mb-2">Tanggal Eksekusi</label>
-                                <select value={syncDate} onChange={(e) => setSyncDate(e.target.value)} className="w-full text-sm py-2 px-3 border border-slate-200 rounded-lg focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 bg-slate-50">
-                                    {Array.from({ length: 31 }, (_, i) => i + 1).map(date => (
-                                        <option key={date} value={date}>Setiap Tanggal {date}</option>
-                                    ))}
-                                </select>
+                                <Dropdown
+                                    size="md"
+                                    value={String(syncDate)}
+                                    onChange={(val) => setSyncDate(val)}
+                                    options={Array.from({ length: 31 }, (_, i) => i + 1).map(date => ({
+                                        value: String(date),
+                                        label: `Setiap Tanggal ${date}`,
+                                    }))}
+                                />
                             </div>
                         )}
 
