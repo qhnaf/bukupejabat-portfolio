@@ -7,6 +7,9 @@ import { loadPdfLibs } from "../utils/pdfLibs";
 import kemluBg from "../assets/images/logo_kemlu_fix.png";
 import { logActivity } from "../utils/logActivity";
 import Modal from "../components/Modal";
+import Input from "../components/ui/Input";
+import Button from "../components/ui/Button";
+import Textarea from "../components/ui/Textarea";
 
 export default function DalamNegeri() {
     const navigate = useNavigate();
@@ -452,37 +455,34 @@ export default function DalamNegeri() {
                     </h2>
 
                     <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-                        <div className="relative w-full sm:w-64">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                            <input
+                        <div className="w-full sm:w-64">
+                            <Input
                                 type="text"
                                 placeholder="Cari unit kerja..."
                                 aria-label="Cari unit kerja dalam negeri"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 w-full bg-slate-50"
+                                size="sm"
+                                className="h-9"
+                                icon={
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                }
                             />
                         </div>
 
                         {/* TOMBOL PDF AKTIF DENGAN LOGIKA PER ORANG */}
-                        <div className="join border-none shadow-sm rounded-xl overflow-hidden">
-                            <button
-                                onClick={() => downloadPDF('preview')}
-                                className="join-item p-2 px-4 text-rose-600 bg-rose-50 hover:bg-rose-100 transition-colors border border-rose-200 hover:border-rose-300 flex items-center justify-center gap-2 group whitespace-nowrap"
-                            >
+                        <div className="flex overflow-hidden rounded-xl shadow-sm">
+                            <Button variant="softDanger" onClick={() => downloadPDF('preview')} className="rounded-none h-9 border border-rose-200 hover:border-rose-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="size-4">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                                 </svg>
                                 <span className="text-xs font-bold uppercase tracking-tight">Preview</span>
-                            </button>
-                            <button
-                                onClick={() => downloadPDF('download')}
-                                className="join-item p-2 px-4 bg-rose-500 hover:bg-rose-600 text-white transition-colors border-none flex items-center justify-center gap-2 group whitespace-nowrap"
-                            >
+                            </Button>
+                            <Button variant="danger" onClick={() => downloadPDF('download')} className="rounded-none h-9">
                                 <span className="text-xs font-bold uppercase tracking-tight">Unduh PDF</span>
-                            </button>
+                            </Button>
                         </div>
                     </div>
                 </div>
@@ -504,15 +504,15 @@ export default function DalamNegeri() {
                                 </h4>
                             </div>
                         </div>
-                        <button
+                        <Button
                             onClick={() => handleGoToMyUnit(myUnit.id)}
-                            className="btn btn-sm bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-600 hover:to-indigo-600 text-white border-none shadow-md hover:shadow-lg transition-all rounded-xl gap-2 font-bold text-xs uppercase group"
+                            className="bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-600 hover:to-indigo-600 shadow-md hover:shadow-lg text-xs uppercase font-bold rounded-xl group border-none"
                         >
                             <span>Buka Unit Kerja</span>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="size-3.5 transition-transform group-hover:translate-x-1">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                             </svg>
-                        </button>
+                        </Button>
                     </div>
                 )}
 
@@ -629,15 +629,17 @@ export default function DalamNegeri() {
                                             return (
                                                 <div className="w-full md:w-auto">
                                                     <p className="font-bold text-slate-400 uppercase mb-1">Aksi</p>
-                                                    <button
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
                                                         onClick={() => openEditModal(unit)}
-                                                        className="btn btn-sm btn-square btn-ghost text-amber-500 hover:bg-amber-100"
+                                                        className="px-2 text-amber-500 hover:bg-amber-100"
                                                         title="Edit Unit Kerja"
                                                     >
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4">
                                                             <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125" />
                                                         </svg>
-                                                    </button>
+                                                    </Button>
                                                 </div>
                                             );
                                         }
@@ -724,37 +726,39 @@ export default function DalamNegeri() {
                     <form onSubmit={handleUpdate} className="space-y-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="md:col-span-2">
-                                <label className="block text-sm font-medium text-slate-700 mb-1">Alamat</label>
-                                <textarea name="alamat" value={editData.alamat} onChange={handleInputChange} className="textarea w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:outline-none" rows="2" />
+                                <label htmlFor="dn-alamat" className="block text-sm font-medium text-slate-700 mb-1">Alamat</label>
+                                <Textarea id="dn-alamat" name="alamat" value={editData.alamat} onChange={handleInputChange} rows="2" />
                             </div>
                             <div className="space-y-2">
-                                <label className="block text-sm font-medium text-slate-700 mb-1">No. Telepon</label>
-                                <input type="text" name="telepon" value={editData.telepon} onChange={handleInputChange} placeholder="Contoh: 021-12345678 EXT.021" className="input input-sm w-full bg-white text-slate-800 border border-slate-300" />
-                                <label className="block text-sm font-medium text-slate-700 mb-1">Fax</label>
-                                <input type="text" name="fax" value={editData.fax} onChange={handleInputChange} className="input input-sm w-full bg-white text-slate-800 border border-slate-300" />
+                                <label htmlFor="dn-telepon" className="block text-sm font-medium text-slate-700 mb-1">No. Telepon</label>
+                                <Input id="dn-telepon" type="text" size="sm" name="telepon" value={editData.telepon} onChange={handleInputChange} placeholder="Contoh: 021-12345678 EXT.021" />
+                                <label htmlFor="dn-fax" className="block text-sm font-medium text-slate-700 mb-1">Fax</label>
+                                <Input id="dn-fax" type="text" size="sm" name="fax" value={editData.fax} onChange={handleInputChange} />
                             </div>
                             <div className="space-y-2">
-                                <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
-                                <textarea
+                                <label htmlFor="dn-email" className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                                <Textarea
+                                    id="dn-email"
                                     name="email"
                                     value={editData.email}
                                     onChange={handleInputChange}
                                     rows="2"
-                                    className="textarea w-full bg-white text-slate-800 border border-slate-300 resize-none"
+                                    className="resize-none"
                                 />
-                                <label className="block text-sm font-medium text-slate-700 mb-1">Website</label>
-                                <textarea
+                                <label htmlFor="dn-website" className="block text-sm font-medium text-slate-700 mb-1">Website</label>
+                                <Textarea
+                                    id="dn-website"
                                     name="website"
                                     value={editData.website}
                                     onChange={handleInputChange}
                                     rows="2"
-                                    className="textarea w-full bg-white text-slate-800 border border-slate-300 resize-none"
+                                    className="resize-none"
                                 />
                             </div>
                         </div>
                         <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-100">
-                            <button type="button" onClick={() => setIsEditModalOpen(false)} className="btn btn-sm btn-ghost text-slate-500">Batal</button>
-                            <button type="submit" disabled={isUpdating} className="btn btn-sm bg-sky-500 text-white border-none">{isUpdating ? "Menyimpan..." : "Simpan Perubahan"}</button>
+                            <Button type="button" variant="ghost" size="sm" onClick={() => setIsEditModalOpen(false)}>Batal</Button>
+                            <Button type="submit" size="sm" disabled={isUpdating}>{isUpdating ? "Menyimpan..." : "Simpan Perubahan"}</Button>
                         </div>
                     </form>
                 </Modal>

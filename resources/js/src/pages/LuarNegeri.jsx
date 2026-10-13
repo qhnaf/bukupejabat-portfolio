@@ -7,6 +7,9 @@ import { loadPdfLibs } from "../utils/pdfLibs";
 import kemluBg from "../assets/images/logo_kemlu_fix.png";
 import { logActivity } from "../utils/logActivity";
 import Modal from "../components/Modal";
+import Input from "../components/ui/Input";
+import Button from "../components/ui/Button";
+import Textarea from "../components/ui/Textarea";
 
 export default function LuarNegeri() {
     const navigate = useNavigate();
@@ -394,23 +397,26 @@ export default function LuarNegeri() {
 
                     <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
                         {/* Kotak Pencarian */}
-                        <div className="relative w-full sm:w-64">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                            <input type="text" aria-label="Cari unit kerja luar negeri" placeholder="Cari unit kerja..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 w-full bg-slate-50" />
+                        <div className="w-full sm:w-64">
+                            <Input type="text" aria-label="Cari unit kerja luar negeri" placeholder="Cari unit kerja..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} size="sm" className="h-9"
+                                icon={
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                }
+                            />
                         </div>
 
-                        <div className="join border-none shadow-sm rounded-xl overflow-hidden">
-                            <button onClick={() => downloadPDF('preview')} className="join-item p-2 px-4 text-rose-600 bg-rose-50 hover:bg-rose-100 transition-colors border border-rose-200 hover:border-rose-300 flex items-center justify-center gap-2 group whitespace-nowrap">
+                        <div className="flex overflow-hidden rounded-xl shadow-sm">
+                            <Button variant="softDanger" onClick={() => downloadPDF('preview')} className="rounded-none h-9 border border-rose-200 hover:border-rose-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="size-4">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                                 </svg>
                                 <span className="text-xs font-bold uppercase tracking-tight">Preview</span>
-                            </button>
-                            <button onClick={() => downloadPDF('download')} className="join-item p-2 px-4 bg-rose-500 hover:bg-rose-600 text-white transition-colors border-none flex items-center justify-center gap-2 group whitespace-nowrap">
+                            </Button>
+                            <Button variant="danger" onClick={() => downloadPDF('download')} className="rounded-none h-9">
                                 <span className="text-xs font-bold uppercase tracking-tight">Unduh PDF</span>
-                            </button>
+                            </Button>
                         </div>
                     </div>
                 </div>
@@ -431,15 +437,15 @@ export default function LuarNegeri() {
                                 </h4>
                             </div>
                         </div>
-                        <button
+                        <Button
                             onClick={() => handleGoToMyUnit(myUnit.id)}
-                            className="btn btn-sm bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white border-none shadow-md hover:shadow-lg transition-all rounded-xl gap-2 font-bold text-xs uppercase group"
+                            className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 shadow-md hover:shadow-lg text-xs uppercase font-bold rounded-xl group border-none"
                         >
                             <span>Buka Unit Kerja</span>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="size-3.5 transition-transform group-hover:translate-x-1">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                             </svg>
-                        </button>
+                        </Button>
                     </div>
                 )}
 
@@ -539,15 +545,17 @@ export default function LuarNegeri() {
                                                     <p className="font-bold text-slate-400 uppercase mb-1">
                                                         Aksi
                                                     </p>
-                                                    <button
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
                                                         onClick={() => openEditModal(unit)}
-                                                        className="btn btn-sm btn-square btn-ghost text-amber-500 hover:bg-amber-100"
+                                                        className="px-2 text-amber-500 hover:bg-amber-100"
                                                         title="Edit Unit Kerja"
                                                     >
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4">
                                                             <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125" />
                                                         </svg>
-                                                    </button>
+                                                    </Button>
                                                 </div>
                                             );
                                         }
@@ -604,74 +612,76 @@ export default function LuarNegeri() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {/* Alamat */}
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1">
+                                <label htmlFor="ln-alamat" className="block text-sm font-medium text-slate-700 mb-1">
                                     Alamat
                                 </label>
-                                <textarea name="alamat" value={editData.alamat} onChange={handleInputChange} className="textarea w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none" rows="3" />
+                                <Textarea id="ln-alamat" name="alamat" value={editData.alamat} onChange={handleInputChange} rows="3" />
                             </div>
 
                             {/* Kontak */}
                             <div className="space-y-2">
-                                <label className="block text-sm font-medium text-slate-700 mb-1">
+                                <label htmlFor="ln-telepon" className="block text-sm font-medium text-slate-700 mb-1">
                                     No. Telepon
                                 </label>
-                                <input type="text" name="telepon" value={editData.telepon} onChange={handleInputChange} placeholder="Telepon" className="input input-sm w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none" />
-                                <label className="block text-sm font-medium text-slate-700 mb-1">
+                                <Input id="ln-telepon" type="text" size="sm" name="telepon" value={editData.telepon} onChange={handleInputChange} placeholder="Telepon" />
+                                <label htmlFor="ln-fax" className="block text-sm font-medium text-slate-700 mb-1">
                                     Fax
                                 </label>
-                                <input type="text" name="fax" value={editData.fax} onChange={handleInputChange} placeholder="Fax" className="input input-sm w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none" />
+                                <Input id="ln-fax" type="text" size="sm" name="fax" value={editData.fax} onChange={handleInputChange} placeholder="Fax" />
                             </div>
 
                             {/* Digital */}
                             <div className="space-y-2">
-                                <label className="block text-sm font-medium text-slate-700 mb-1">
+                                <label htmlFor="ln-email" className="block text-sm font-medium text-slate-700 mb-1">
                                     Email
                                 </label>
-                                <textarea
+                                <Textarea
+                                    id="ln-email"
                                     name="email"
                                     value={editData.email}
                                     onChange={handleInputChange}
                                     placeholder="Email"
                                     rows="2"
-                                    className="textarea w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none resize-none"
+                                    className="resize-none"
                                 />
-                                <label className="block text-sm font-medium text-slate-700 mb-1">
+                                <label htmlFor="ln-website" className="block text-sm font-medium text-slate-700 mb-1">
                                     Website
                                 </label>
-                                <textarea
+                                <Textarea
+                                    id="ln-website"
                                     name="website"
                                     value={editData.website}
                                     onChange={handleInputChange}
                                     placeholder="Website"
                                     rows="2"
-                                    className="textarea w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none resize-none"
+                                    className="resize-none"
                                 />
                             </div>
 
                             {/* Operasional - khusus Luar Negeri */}
                             <div className="space-y-2">
-                                <label className="block text-sm font-medium text-slate-700 mb-1">
+                                <label htmlFor="ln-hari" className="block text-sm font-medium text-slate-700 mb-1">
                                     Hari Kerja
                                 </label>
-                                <input type="text" name="hari_kerja" value={editData.hari_kerja} onChange={handleInputChange} placeholder="Hari Kerja (Cth: Senin - Jumat)" className="input input-sm w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none" />
-                                <input type="text" name="beda_jam" value={editData.beda_jam} onChange={handleInputChange} placeholder="Beda Jam" className="input input-sm w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none" />
-                                <label className="block text-sm font-medium text-slate-700 mb-1">
+                                <Input id="ln-hari" type="text" size="sm" name="hari_kerja" value={editData.hari_kerja} onChange={handleInputChange} placeholder="Hari Kerja (Cth: Senin - Jumat)" />
+                                <Input id="ln-jam" type="text" size="sm" name="beda_jam" value={editData.beda_jam} onChange={handleInputChange} placeholder="Beda Jam" />
+                                <label htmlFor="ln-panas" className="block text-sm font-medium text-slate-700 mb-1">
                                     Perbedaan Waktu
                                 </label>
-                                <input type="text" name="musim_panas" value={editData.musim_panas} onChange={handleInputChange} placeholder="Musim Panas" className="input input-sm w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none" />
-                                <input type="text" name="musim_dingin" value={editData.musim_dingin} onChange={handleInputChange} placeholder="Musim Dingin" className="input input-sm w-full bg-white text-slate-800 border border-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none" />
+                                <Input id="ln-panas" type="text" size="sm" name="musim_panas" value={editData.musim_panas} onChange={handleInputChange} placeholder="Musim Panas" />
+                                <Input id="ln-dingin" type="text" size="sm" name="musim_dingin" value={editData.musim_dingin} onChange={handleInputChange} placeholder="Musim Dingin" />
                             </div>
                         </div>
 
                         <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-100">
-                            <button type="button" onClick={() => setIsEditModalOpen(false)} className="btn btn-sm btn-ghost text-slate-500 hover:bg-slate-100">
+                            <Button type="button" variant="ghost" size="sm" onClick={() => setIsEditModalOpen(false)}>
                                 Batal
-                            </button>
-                            <button type="submit" disabled={isUpdating} className="btn btn-sm bg-sky-500 hover:bg-sky-600 text-white border-none">
+                            </Button>
+                            <Button type="submit" size="sm" disabled={isUpdating}>
                                 {isUpdating ? "Menyimpan..." : "Simpan Perubahan"}
-                                </button>
-                            </div>
-                        </form>
+                            </Button>
+                        </div>
+                    </form>
                 </Modal>
             )}
         </div>
