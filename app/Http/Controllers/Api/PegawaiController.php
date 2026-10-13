@@ -193,7 +193,6 @@ class PegawaiController extends Controller
         }
 
         $pegawai->nama = $request->nama ?? $pegawai->nama;
-        $pegawai->email = $request->email ?? $pegawai->email;
         $pegawai->no_handphone = $request->no_handphone ?? $pegawai->no_handphone;
         $pegawai->alamat = $request->alamat ?? $pegawai->alamat;
 
